@@ -1,7 +1,6 @@
-package com.example.price_analysis_app;
+package com.example.price_analysis_app.account;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.activity.result.ActivityResultLauncher;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,13 +9,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.price_analysis_app.R;
+import com.example.price_analysis_app.uiStuff.HomeActivity;
+
 public class LoginActivity extends AppCompatActivity {
     private Button btn;
     private Button btnForgot;
     private EditText usr;
     private EditText pass;
-    ActivityResultLauncher<Intent> activityLauncher=null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +25,6 @@ public class LoginActivity extends AppCompatActivity {
         pass=findViewById(R.id.edtPassword);
         btn = findViewById(R.id.btnLogIn);
         btnForgot=findViewById(R.id.btnForgot);
-
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,4 +1,4 @@
-package com.example.price_analysis_app;
+package com.example.price_analysis_app.account;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,19 +6,31 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Account implements Parcelable, Serializable {
     private String userName;
     private String password;
+    private Date birthDate;
 
-    public Account(String userName, String password) {
+
+    public Account(String userName, String password, Date birthDate) {
         this.userName = userName;
         this.password = password;
+        this.birthDate = birthDate;
     }
 
     protected Account(Parcel in) {
         userName = in.readString();
         password = in.readString();
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
     }
 
     public static final Creator<Account> CREATOR = new Creator<Account>() {

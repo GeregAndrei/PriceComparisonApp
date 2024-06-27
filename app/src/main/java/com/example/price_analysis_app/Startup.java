@@ -1,17 +1,21 @@
 package com.example.price_analysis_app;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavHostController;
+
+import com.example.price_analysis_app.account.LoginActivity;
+import com.example.price_analysis_app.uiStuff.HomeActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.SharedMemory;
 import android.view.View;
 import android.widget.Button;
 
 public class Startup extends AppCompatActivity {
-    Button btnRegisterAccount;
-    Button btnSkip;
+    private Button btnRegisterAccount;
+    private Button btnSkip;
+NavHostController navHostController=new NavHostController(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +25,6 @@ public class Startup extends AppCompatActivity {
         btnSkip = findViewById(R.id.btnSkipAccount);
         SharedPreferences prefs = getSharedPreferences("Preferences", MODE_PRIVATE);
         boolean isFirstLaunch = prefs.getBoolean("isFirstLaunch", true);
-
         if (isFirstLaunch) {
             btnRegisterAccount.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -40,7 +43,7 @@ public class Startup extends AppCompatActivity {
                 }
             });
         } else {
-            Intent intent = new Intent(this, LoginActivity.class);
+            Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
             finish();
 
