@@ -17,35 +17,26 @@
             android:name=".Items.ItemAdapter"
             android:exported="false" />
         <activity
-            android:name=".uiStuff.Technical"
+            android:name=".Items.Technical"
             android:exported="false" />
         <activity
             android:name=".Items.LinkAdapter"
             android:exported="false" />
         <activity
             android:name=".uiStuff.HomeActivity"
-            android:exported="false" />
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
         <activity
             android:name=".Items.ItemDisplay"
             android:exported="false" />
-        <activity
-            android:name=".Startup"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".account.LoginActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

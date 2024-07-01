@@ -2,6 +2,7 @@ package com.example.price_analysis_app.uiStuff;
 import com.example.price_analysis_app.Items.Icallable;
 import com.example.price_analysis_app.Items.Item;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.text.Editable;
@@ -64,7 +65,7 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
-        List<String> collectionNames = Arrays.asList(new String("combine_frigorifice"),new String("masini_de_spalat_rufe"));
+        List<String> collectionNames = Arrays.asList(new String("combine_frigorifice"),new String("masini_spalat_rufe"),new String("cuptoare_incorporabile"));
         optionsSp=findViewById(R.id.spinnerOptions);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, collectionNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -87,6 +88,7 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String query = s.toString();
                 filteredItems.clear();
+                itemAdapter.notifyDataSetChanged();
                 if(query.isEmpty()){
                     filteredItems.addAll(itemList);
 
@@ -94,9 +96,12 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
 
                     query=query.toLowerCase();
                     for(Item item : itemList){
-                        if (item.getName().toLowerCase().contains(query)){
-                            filteredItems.add(item);
+                        if(item.getName() != null){
+                            if (item.getName().toLowerCase().contains(query)){
+                                filteredItems.add(item);
+                            }
                         }
+
                     }
                 }
 //                for(Item item : filteredItems){
@@ -227,4 +232,11 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
         System.out.println("before being sent "+filteredItems.get(position).getLinkList().get(0).toString());
         startActivity(intent);
     }
+
+    @Override
+    public void onLinkClicked(Link position) {
+
+    }
+
+
 }

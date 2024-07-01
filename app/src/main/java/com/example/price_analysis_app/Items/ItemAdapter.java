@@ -25,6 +25,11 @@ import com.example.price_analysis_app.uiStuff.HomeActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import coil.Coil;
+import coil.ImageLoader;
+import coil.request.ImageRequest;
+import coil.target.ImageViewTarget;
+
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
     private Context context;
     private static List<Item> itemList = new ArrayList<>();
@@ -60,8 +65,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
     public void onBindViewHolder(@NonNull ItemHolder holder, int position) {
         Item item = itemList.get(position);
         holder.name.setText(item.name);
-        Glide.with(context).load(item.getImgUrl()).into(holder.imgUrl);
-        //Glide.with(this).load(selectedObject.getImgUrl()).into(img);
+
+        Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).into(holder.imgUrl);
         int pos = itemList.indexOf(item);
         holder.position=pos;
         holder.itemView.setOnClickListener(new View.OnClickListener() {

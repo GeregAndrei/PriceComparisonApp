@@ -1,4 +1,4 @@
-package com.example.price_analysis_app.uiStuff;
+package com.example.price_analysis_app.Items;
 
 import android.content.Context;
 import android.os.Bundle;

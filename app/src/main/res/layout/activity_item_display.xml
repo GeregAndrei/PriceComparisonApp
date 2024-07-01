@@ -53,7 +53,8 @@
                             android:id="@+id/technicalTv"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:text="Show Techincal Characteristics" />
+                            android:text="@string/technicalSpecs"
+                            android:textSize="20dp"/>
                     </LinearLayout>
 
                 </LinearLayout>

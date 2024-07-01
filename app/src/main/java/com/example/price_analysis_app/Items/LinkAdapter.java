@@ -1,6 +1,8 @@
 package com.example.price_analysis_app.Items;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,18 +14,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.price_analysis_app.R;
+import com.example.price_analysis_app.uiStuff.HomeActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class LinkAdapter extends RecyclerView.Adapter<LinkAdapter.LinkHolder> {
 private static List<Link> linkList=new ArrayList<>();
-    private Context context;
+    private ItemDisplay context;
+     Icallable icallable;
     static int  index=0;
 
-    public LinkAdapter(Context context,List<Link> linkList) {
+    public LinkAdapter(ItemDisplay context, List<Link> linkList) {
         this.context = context;
         this.linkList=linkList;
+        this.icallable=context;
     }
 
     @NonNull
@@ -42,6 +47,12 @@ private static List<Link> linkList=new ArrayList<>();
         System.out.println("object is oK?" +link.toString());
         System.out.println(link.getSiteLink());
         holder.URL.setText("apasa aici pentru link");
+        holder.URL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            icallable.onLinkClicked(link);
+            }
+        });
         holder.name.setText(link.getName());
         holder.price.setText(String.valueOf(link.getPrice())+" Lei");
 
@@ -63,12 +74,7 @@ private static List<Link> linkList=new ArrayList<>();
          URL =itemView.findViewById(R.id.URLtv);
          name= itemView.findViewById(R.id.siteNameTv);
          price = itemView.findViewById(R.id.priceTv);
-         URL.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View v) {
 
-             }
-         });
         }
     }
 }
