@@ -44,10 +44,6 @@ import java.util.regex.Pattern;
 public class HomeActivity extends AppCompatActivity implements Icallable {
     private EditText searchBar;
 
-
-
-
-
     public HomeActivity() throws MalformedURLException {
     }
     private Button button;
@@ -57,20 +53,26 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
     private RecyclerView rvItems;
     private ItemAdapter itemAdapter;
     private Spinner optionsSp;
+    private Button menuTestButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //get database
         db=FirebaseFirestore.getInstance();
 
         EdgeToEdge.enable(this);
+        //link activity
         setContentView(R.layout.activity_home);
+        //list of house appliances
         List<String> collectionNames = Arrays.asList(new String("combine_frigorifice"),new String("masini_spalat_rufe"),new String("cuptoare_incorporabile"));
         optionsSp=findViewById(R.id.spinnerOptions);
+
+        //set list of items
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, collectionNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         optionsSp.setAdapter(adapter);
-
+        //idk dar e legat de drawer activity
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -78,6 +80,15 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
         });
         int i=0;
 
+        //test button for menu
+        menuTestButton=findViewById(R.id.buttonMenu);
+        menuTestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               testDrawer();
+            }
+        });
+//search bar
         searchBar = findViewById(R.id.searchBar);
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
@@ -88,6 +99,7 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String query = s.toString();
                 filteredItems.clear();
+                //search at every letter typed
                 itemAdapter.notifyDataSetChanged();
                 if(query.isEmpty()){
                     filteredItems.addAll(itemList);
@@ -115,12 +127,14 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
 
             }
         });
+        //link the list to the adapter and display them
         filteredItems.addAll(itemList);
         rvItems=findViewById(R.id.rvItems);
-
         itemAdapter=new ItemAdapter(this,filteredItems);
         rvItems.setLayoutManager(new LinearLayoutManager(this));
         rvItems.setAdapter(itemAdapter);
+
+        //open activty item_display after clicking one item
         optionsSp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -136,6 +150,8 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
         });
         //ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemList.stream().map(Item::getName).distinct().collect(Collectors.toList()));
     }
+
+    //item retrieving functionality from the database --maybe change
     private void retrieveItems(String collection){
         db.collection(collection).get().addOnCompleteListener(task -> {
             if(task.isSuccessful()){
@@ -167,6 +183,7 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
         });
 
     }
+    //transforming item from string
     public Link fromString(String linkString){
         //"Link{siteLink='https://www.google.com/', name='among usV3', price='50.0 Lei'}"
 
@@ -224,15 +241,19 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
     }
 
 
-
+    //debugging info
     @Override
     public void onItemClicked(int position) {
         Intent intent = new Intent(this, ItemDisplay.class);
         intent.putExtra("selectedObject",filteredItems.get(position));
-        System.out.println("before being sent "+filteredItems.get(position).getLinkList().get(0).toString());
+        //System.out.println("before being sent "+filteredItems.get(position).getLinkList().get(0).toString());
         startActivity(intent);
     }
 
+    public void testDrawer(){
+        Intent intent =new Intent(this, TestActivity.class);
+        startActivity(intent);
+    }
     @Override
     public void onLinkClicked(Link position) {
 

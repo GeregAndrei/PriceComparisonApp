@@ -37,17 +37,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
     Icallable mainActivityCallback;
 
     static int index = 0;
-
     public ItemAdapter(HomeActivity context, List<Item> itemList) {
         this.context = context;
         this.itemList = itemList;
         this.filteredItems = new ArrayList<>(itemList);
         this.mainActivityCallback=context;
-
-    }
-
-    public void filter(String text) {
-
 
     }
 

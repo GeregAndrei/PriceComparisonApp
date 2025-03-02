@@ -28,7 +28,8 @@ public class Link implements Parcelable {
         System.out.println(siteLinkString);
         try{
             this.siteLink =  new URL(siteLinkString);
-            System.out.println(this.siteLink);
+            //display link for debugging
+            //System.out.println(this.siteLink);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             this.siteLink=null;

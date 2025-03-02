@@ -35,11 +35,13 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_item_display);
+        //drawer stuff
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        //
         Item selectedObject = (Item) getIntent().getParcelableExtra("selectedObject");
         name=findViewById(R.id.titleItemTv);
         img =findViewById(R.id.imageView2);
@@ -57,6 +59,7 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
         linkList.setAdapter(linkAdapter);
 
             name.setText(selectedObject.name);
+            //url to img library
              Glide.with(this).load(selectedObject.getImgUrl()).into(img);
 //            ImageLoader imageLoader= Coil.imageLoader(this);
 //            ImageRequest request=new ImageRequest.Builder(this).data(selectedObject.getImgUrl().toString()).target(new ImageViewTarget(img)).build();
