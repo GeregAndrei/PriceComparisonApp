@@ -23,6 +23,7 @@ import com.example.price_analysis_app.R;
 import com.example.price_analysis_app.uiStuff.HomeActivity;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import coil.Coil;
@@ -59,8 +60,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
     public void onBindViewHolder(@NonNull ItemHolder holder, int position) {
         Item item = itemList.get(position);
         holder.name.setText(item.name);
+        Link link =item.linkList.stream().min(Comparator.comparingDouble(Link::getPrice)).orElse(null);
 
         Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).into(holder.imgUrl);
+        if (link != null) {
+            holder.priceAndSite.setText(link.getPrice() + "lei on: " + link.getName());
+        } else {
+            holder.priceAndSite.setText("No link available");
+        }
         int pos = itemList.indexOf(item);
         holder.position=pos;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -80,12 +87,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
         int position;
         private TextView name;
         private ImageView imgUrl;
+        private TextView priceAndSite;
 
 
         public ItemHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.itemNameTv);
             imgUrl = itemView.findViewById(R.id.itemImageTv);
+            priceAndSite=itemView.findViewById(R.id.itemPriceAndSitetv);
 
 
         }

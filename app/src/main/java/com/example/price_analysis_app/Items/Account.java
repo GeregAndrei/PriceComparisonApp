@@ -8,7 +8,7 @@ public class Account {
     public String username;
     private String email;
     private String password;
-    private List<Integer> favorites;
+    private List<String> favorites;
 
     private boolean isAdminStatus() {
         return adminStatus;
@@ -50,11 +50,11 @@ public class Account {
         this.password = password;
     }
 
-    public List<Integer> getFavorites() {
+    public List<String> getFavorites() {
         return favorites;
     }
 
-    private void setFavorites(List<Integer> favorites) {
+    private void setFavorites(List<String> favorites) {
         this.favorites = favorites;
     }
 

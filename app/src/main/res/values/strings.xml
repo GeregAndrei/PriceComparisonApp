@@ -2,7 +2,7 @@
     <string name="app_name">Price-Analysis-App</string>
     <string name="searchBarHint">Cauta articol</string>
     <string name="linkHint">apasa aici pentru link</string>
-    <string name="technicalSpecs">specificatii technice</string>
+    <string name="technicalSpecs">Technical specifications</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
