@@ -95,8 +95,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
             name = itemView.findViewById(R.id.itemNameTv);
             imgUrl = itemView.findViewById(R.id.itemImageTv);
             priceAndSite=itemView.findViewById(R.id.itemPriceAndSitetv);
-
-
         }
 
     }
