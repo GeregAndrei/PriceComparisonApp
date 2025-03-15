@@ -1,4 +1,4 @@
-package com.example.price_analysis_app.Items;
+package com.example.price_analysis_app.comments;
 
 import android.os.Bundle;
 
@@ -7,13 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.price_analysis_app.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CommentsStub extends AppCompatActivity {
 

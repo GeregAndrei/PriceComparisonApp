@@ -1,8 +1,5 @@
-package com.example.price_analysis_app.Items;
+package com.example.price_analysis_app.Links;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +10,9 @@ import androidx.annotation.NonNull;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.price_analysis_app.Items.Icallable;
+import com.example.price_analysis_app.Items.ItemDisplay;
 import com.example.price_analysis_app.R;
-import com.example.price_analysis_app.uiStuff.HomeActivity;
 
 import java.util.ArrayList;
 import java.util.List;

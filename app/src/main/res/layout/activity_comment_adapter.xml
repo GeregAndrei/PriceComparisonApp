@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".Items.CommentAdapter">
+    tools:context=".comments.CommentAdapter">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="0.1"
         android:orientation="horizontal">
@@ -36,8 +36,9 @@
         <RatingBar
             android:id="@+id/ratingBarTv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_height="60dp"
+            android:layout_weight="2"
+            android:numStars="5" />
     </LinearLayout>
 
     <LinearLayout

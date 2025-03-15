@@ -1,8 +1,6 @@
 package com.example.price_analysis_app.Items;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,26 +8,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.price_analysis_app.Links.Link;
 import com.example.price_analysis_app.R;
 import com.example.price_analysis_app.uiStuff.HomeActivity;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
-import coil.Coil;
-import coil.ImageLoader;
-import coil.request.ImageRequest;
-import coil.target.ImageViewTarget;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
     private Context context;
@@ -64,7 +53,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
 
         Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).into(holder.imgUrl);
         if (link != null) {
-            holder.priceAndSite.setText(link.getPrice() + "lei on: " + link.getName());
+            holder.priceAndSite.setText(link.getPrice() + "lei on " + link.getName());
         } else {
             holder.priceAndSite.setText("No link available");
         }

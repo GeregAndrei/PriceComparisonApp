@@ -2,9 +2,11 @@ package com.example.price_analysis_app.Items;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
+
+import com.example.price_analysis_app.Links.Link;
+import com.example.price_analysis_app.comments.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,14 +17,26 @@ public class Item implements Parcelable {
     protected List<Link> linkList=new ArrayList<>();
     protected String imgUrl;
     protected String technicalChar;
+    protected List<Comment>commentList;
+    private String docId;
+
     public Item(String name, String productCode, List<Link> linkList,String img,String technicalChar) {
         this.name = name;
         this.productCode = productCode;
         this.linkList=linkList;
         this.imgUrl=img;
         this.technicalChar=technicalChar;
+        this.commentList = new ArrayList<>();
     }
-
+    public Item(String name, String productCode, List<Link> linkList,String img,String technicalChar,String documentId) {
+        this.name = name;
+        this.productCode = productCode;
+        this.linkList=linkList;
+        this.imgUrl=img;
+        this.technicalChar=technicalChar;
+        this.commentList = new ArrayList<>();
+        this.docId=documentId;
+    }
     public static final Creator<Item> CREATOR = new Creator<Item>() {
         @Override
         public Item createFromParcel(Parcel in) {
@@ -34,6 +48,18 @@ public class Item implements Parcelable {
             return new Item[size];
         }
     };
+    public Item() {
+    }
+    public Item(Parcel in) {
+        name = in.readString();
+        productCode = in.readString();
+        linkList = new ArrayList<>();
+        in.readTypedList(linkList, Link.CREATOR);
+        imgUrl = in.readString();
+        technicalChar=in.readString();
+        commentList = in.createTypedArrayList(Comment.CREATOR);
+        docId=in.readString();
+    }
 
     public String getTechnicalChar() {
         return technicalChar;
@@ -46,20 +72,6 @@ public class Item implements Parcelable {
     public void setImg(String img) {
         this.imgUrl = img;
     }
-
-    public Item() {
-
-    }
-
-    public Item(Parcel in) {
-        name = in.readString();
-        productCode = in.readString();
-        linkList = new ArrayList<>();
-        in.readTypedList(linkList, Link.CREATOR);
-        imgUrl = in.readString();
-        technicalChar=in.readString();
-    }
-
 
     public String getName() {
         return this.name;
@@ -96,6 +108,20 @@ public class Item implements Parcelable {
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
     }
+    public void addComment(Comment comment) {
+        if (comment != null){
+            this.commentList.add(comment);
+        }
+
+    }
+
+    public String getDocId() {
+        return docId;
+    }
+
+    public void setDocId(String docId) {
+        this.docId = docId;
+    }
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
@@ -104,6 +130,8 @@ public class Item implements Parcelable {
         dest.writeTypedList(linkList);
         dest.writeString(imgUrl);
         dest.writeString(technicalChar);
+        dest.writeTypedList(commentList);
+        dest.writeString(docId);
     }
 
     @Override
@@ -114,7 +142,7 @@ public class Item implements Parcelable {
                 ", linkList=" + linkList +
                 ", imgUrl='" + imgUrl + '\'' +
                 ", technicalChar='" + technicalChar + '\'' +
+                ", commentList=" + commentList +
                 '}';
     }
-
 }

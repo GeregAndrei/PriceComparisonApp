@@ -1,4 +1,4 @@
-package com.example.price_analysis_app.Items;
+package com.example.price_analysis_app.Account;
 
 import java.util.List;
 

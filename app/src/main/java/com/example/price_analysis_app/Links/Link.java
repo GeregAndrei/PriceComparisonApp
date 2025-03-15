@@ -1,4 +1,4 @@
-package com.example.price_analysis_app.Items;
+package com.example.price_analysis_app.Links;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,9 +7,6 @@ import androidx.annotation.NonNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Link implements Parcelable {
     private URL siteLink;

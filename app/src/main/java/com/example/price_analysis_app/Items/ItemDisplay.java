@@ -1,5 +1,6 @@
 package com.example.price_analysis_app.Items;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,10 +9,11 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -20,15 +22,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.price_analysis_app.Links.Link;
+import com.example.price_analysis_app.Links.LinkAdapter;
+import com.example.price_analysis_app.comments.Comment;
+import com.example.price_analysis_app.comments.CommentAdapter;
 import com.example.price_analysis_app.R;
+import com.example.price_analysis_app.comments.CommentsActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import coil.Coil;
-import coil.ImageLoader;
-import coil.request.ImageRequest;
-import coil.target.ImageViewTarget;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class ItemDisplay extends AppCompatActivity implements Icallable {
     private RecyclerView linkList;
@@ -38,9 +48,13 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
     private boolean isCommentsInflated = false;
     private CommentAdapter commentAdapter;
     private View commentsView;
+    private Context context;
+    private ActivityResultLauncher<Intent> commentActivityLauncher;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        db=FirebaseFirestore.getInstance();
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_item_display);
@@ -51,6 +65,7 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
         });
         // Retrieve the selected item passed from the previous activity
         Item selectedObject = (Item) getIntent().getParcelableExtra("selectedObject");
+        Log.d("UUUUUUUUUUUUUUU",selectedObject.getDocId());
         name=findViewById(R.id.titleItemTv);
         img =findViewById(R.id.imageView2);
         specs=findViewById(R.id.buttonTechnical);
@@ -75,10 +90,10 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
 
         //dummy list
         List<Comment> commentList = new ArrayList<>();
-        commentList.add(new Comment("Alice", "Great product!", 5));
-        commentList.add(new Comment("Bob", "Could be better.", 4));
-        commentList.add(new Comment("Bob2", "Could be better.", 3));
-        commentList.add(new Comment("Bob3", "Could be better.", 2));
+        commentList.add(new Comment("Alice","a","Great product!",5));
+        commentList.add(new Comment("Bob","b" ,"Could be better.", 4));
+        commentList.add(new Comment("Bob2","c" ,"Could be better.", 3));
+        commentList.add(new Comment("Bob3", "d","Could be better.", 2));
         commentAdapter = new CommentAdapter(this, commentList);
 
         Button showCommentsButton = findViewById(R.id.showCommentsButton);
@@ -101,17 +116,61 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
                 }
             }
         });
+        Button addcomment =findViewById(R.id.buttonAddComment);
+        addcomment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               addComment(selectedObject);
+            }
+        });
+        commentActivityLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            Comment newComment = data.getParcelableExtra("newComment");
+                            // Assuming selectedObject is available (e.g., passed to this activity)
 
+                            selectedObject.addComment(newComment);
+                            commentAdapter.notifyDataSetChanged();
+                            pushCommentToFirebase(selectedObject.getDocId(), newComment);
+                        }
+                    }
+                }
+        );
+
+
+
+    }
+
+    private void pushCommentToFirebase(String documentId, Comment comment) {
+
+        DocumentReference docRef = db.collection("combine_frigorifice").document(documentId);
+                        Map<String, Object> data = new HashMap<>();
+                        data.put("comments", FieldValue.arrayUnion(comment.toString()));
+
+                        docRef.update("comments", FieldValue.arrayUnion(comment.toString()))
+                                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Comment added successfully"))
+                                .addOnFailureListener(e -> Log.e("Firestore", "Error adding comment", e));
+                    }
+
+
+
+    private void addComment(Item selectedObject){
+        Intent intent =new Intent(ItemDisplay.this, CommentsActivity.class);
+        intent.putExtra("itemforcomment",selectedObject);
+        commentActivityLauncher.launch(intent);
     }
     private void openDetailView(Item selectedObject) {
         Intent intent = new Intent(this, Technical.class);
         intent.putExtra("selectedObject",selectedObject);
-
         startActivity(intent);
     }
 
     @Override
     public void onItemClicked(int position) {
+
 
     }
 

@@ -1,22 +1,13 @@
-package com.example.price_analysis_app.Items;
-
-import static androidx.core.content.ContextCompat.startActivity;
+package com.example.price_analysis_app.comments;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.price_analysis_app.R;
@@ -43,7 +34,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentH
         Comment c =commentList.get(position);
         holder.accountName.setText(c.getAccountName());
         holder.rating.setRating(c.getBar());
-        holder.description.setText(c.getDescription());
+        holder.description.setText(c.getDescription().toString());
         int pos =commentList.indexOf(position);
         holder.position=position;
         holder.itemView.setOnClickListener(new View.OnClickListener() {

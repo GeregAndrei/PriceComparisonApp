@@ -2,7 +2,6 @@ package com.example.price_analysis_app.uiStuff;
 import com.example.price_analysis_app.Items.Icallable;
 import com.example.price_analysis_app.Items.Item;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
 import android.text.Editable;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -26,7 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.price_analysis_app.Items.ItemAdapter;
 import com.example.price_analysis_app.Items.ItemDisplay;
-import com.example.price_analysis_app.Items.Link;
+import com.example.price_analysis_app.Links.Link;
 
 import com.example.price_analysis_app.R;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -43,6 +41,7 @@ import java.util.regex.Pattern;
 
 public class HomeActivity extends AppCompatActivity implements Icallable {
     private EditText searchBar;
+
 
     public HomeActivity() throws MalformedURLException {
     }
@@ -164,12 +163,13 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
                    String imgUrl = (String)documentSnapshot.get("imgUrl");
                    String productCode=(String)documentSnapshot.get("productCode");
                    String technicalChar=(String)documentSnapshot.get("technicalChar");
+                   String documentId=(String)documentSnapshot.getId();
                    List<Link>links=new ArrayList<>();
                    for(String h : g){
                        Link temp=fromString(h);
                        links.add(temp);
                    }
-                   Item item = new Item(name,productCode,links,imgUrl,technicalChar);
+                   Item item = new Item(name,productCode,links,imgUrl,technicalChar,documentId);
                    itemList.add(item);
                    // Log.d("Firestore",g.toString());
                     //itemList.add(item);
@@ -185,7 +185,6 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
     }
     //transforming item from string
     public Link fromString(String linkString){
-        //"Link{siteLink='https://www.google.com/', name='among usV3', price='50.0 Lei'}"
 
         Pattern siteLinkPattern=Pattern.compile("siteLink='(https?://[^']+)'");
         Pattern namePattern = Pattern.compile("name='([^']*)'");

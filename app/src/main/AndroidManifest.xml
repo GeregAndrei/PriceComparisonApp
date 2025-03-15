@@ -15,10 +15,13 @@
         android:theme="@style/Theme.PriceAnalysisApp"
         tools:targetApi="31">
         <activity
-            android:name=".Items.CommentsStub"
+            android:name=".comments.CommentsActivity"
             android:exported="false" />
         <activity
-            android:name=".Items.CommentAdapter"
+            android:name=".comments.CommentsStub"
+            android:exported="false" />
+        <activity
+            android:name=".comments.CommentAdapter"
             android:exported="false" />
         <activity
             android:name=".uiStuff.TestActivity"
@@ -32,7 +35,7 @@
             android:name=".Items.Technical"
             android:exported="false" />
         <activity
-            android:name=".Items.LinkAdapter"
+            android:name=".Links.LinkAdapter"
             android:exported="false" />
         <activity
             android:name=".uiStuff.HomeActivity"
