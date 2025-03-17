@@ -15,6 +15,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.price_analysis_app.Account.Account;
+import com.example.price_analysis_app.Account.SessionManager;
 import com.example.price_analysis_app.Items.Item;
 import com.example.price_analysis_app.R;
 
@@ -26,6 +28,7 @@ private TextView name;
 private RatingBar ratingBar;
 private EditText commentBody;
 private Button createComment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +39,13 @@ private Button createComment;
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        Account currentAccount = SessionManager.getCurrentAccount();
+        String accountName = currentAccount.getUsername();
+
+        String accountId = currentAccount.getId();
+
+
         ratingBar=findViewById(R.id.commentRating);
         commentBody =findViewById(R.id.commentBody);
         createComment=findViewById(R.id.buttonCreateComment);
@@ -44,7 +54,7 @@ private Button createComment;
             public void onClick(View view) {
                 Item item = getIntent().getParcelableExtra("itemforcomment");
                 String productCode = (item != null) ? item.getProductCode() : "";
-                Comment comment = new Comment("1", productCode, commentBody.getText().toString(), ratingBar.getRating());
+                Comment comment = new Comment(accountName,accountId, productCode, commentBody.getText().toString(), ratingBar.getRating());
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra("newComment", comment);
                 setResult(RESULT_OK, resultIntent);

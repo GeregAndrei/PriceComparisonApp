@@ -7,25 +7,35 @@ import androidx.annotation.NonNull;
 
 public class Comment implements Parcelable {
     private String accountName;
-
+    private String accountId;
     private String productId;
     private String description;
     private float bar;
 
-    public Comment(String accountName, String productId, String description, float bar) {
+    public Comment(String accountName,String accountId,String productId, String description, float bar) {
         this.accountName = accountName;
+      this.accountId=accountId;
         this.productId = productId;
         this.description = description;
         this.bar = bar;
     }
     protected Comment(Parcel in) {
         accountName = in.readString();
+        accountId = in.readString();
         productId = in.readString();
         description = in.readString();
         bar = in.readFloat();
     }
     public String getAccountName() {
         return accountName;
+    }
+
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public void setAccountName(String accountName) {
@@ -75,15 +85,18 @@ public class Comment implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel parcel, int flags) {
         parcel.writeString(accountName);
+        parcel.writeString(accountId);
         parcel.writeString(productId);
         parcel.writeString(description);
         parcel.writeFloat(bar);
+        parcel.writeString(accountId);
     }
 
     @Override
     public String toString() {
         return "Comment{" +
                 "accountName='" + accountName + '\'' +
+                "accountId='" + accountId + '\'' +
                 ", description='" + description + '\'' +
                 ", bar=" + bar +
                 '}';

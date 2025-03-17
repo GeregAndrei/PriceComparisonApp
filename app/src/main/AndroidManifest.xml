@@ -15,6 +15,18 @@
         android:theme="@style/Theme.PriceAnalysisApp"
         tools:targetApi="31">
         <activity
+            android:name=".Account.bookmarkAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".Account.BookmarkActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Account.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Account.LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".comments.CommentsActivity"
             android:exported="false" />
         <activity

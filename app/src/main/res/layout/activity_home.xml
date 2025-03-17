@@ -26,6 +26,20 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:text="Button" />
+
+            <Button
+                android:id="@+id/buttonRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:text="Button" />
+
+            <Button
+                android:id="@+id/BOOKMARKS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:text="Button" />
         </LinearLayout>
 
         <LinearLayout
@@ -41,6 +55,7 @@
                 android:backgroundTint="#0B2ACA"
                 android:hint="@string/searchBarHint"
                 android:inputType="text" />
+
         </LinearLayout>
 
     </LinearLayout>
@@ -63,7 +78,9 @@
         android:id="@+id/rvItems"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        >
+
+    </androidx.recyclerview.widget.RecyclerView>
 
 
 </LinearLayout>

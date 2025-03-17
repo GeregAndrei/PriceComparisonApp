@@ -32,8 +32,16 @@
                     android:layout_height="wrap_content"
                     android:text="Frigider cu doua usi Heinner HF-205F+, 205 l, Clasa F, IIluminare LED, 3 rafturi de sticla, H 143.4 cm, Alb "
                     android:textSize="21sp" />
+
             </LinearLayout>
+
         </LinearLayout>
+
+        <CheckBox
+            android:id="@+id/bookmarkButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bookmarked" />
 
         <LinearLayout
             android:layout_width="match_parent"
