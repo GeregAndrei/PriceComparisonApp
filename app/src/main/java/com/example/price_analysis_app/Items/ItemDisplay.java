@@ -216,6 +216,7 @@ private void pushCommentToFirebase(String documentId, Comment comment) {
     // Build a map for the new comment
     Map<String, Object> commentMap = new HashMap<>();
     commentMap.put("accountName", comment.getAccountName());
+    commentMap.put("accountId", currentAccount.getId());
     commentMap.put("accountId", comment.getAccountId());
     commentMap.put("description", comment.getDescription());
     commentMap.put("bar", comment.getBar());
@@ -277,7 +278,7 @@ private void fetchCommentsFromFirestore(String collectionName, String docId) {
                         for (Map<String, Object> commentMap : commentsField) {
                             // Extract each field from the map
                             String accountName = (String) commentMap.get("accountName");
-                            //String accountId = (String) commentMap.get("accountId");
+                            String accountId = (String) commentMap.get("accountId");
                             String description = (String) commentMap.get("description");
                             Number barNumber   = (Number) commentMap.get("bar");
 
@@ -381,4 +382,13 @@ private void fetchCommentsFromFirestore(String collectionName, String docId) {
             startActivity(intent);
 
     }
+    ChatMessage systemMessage = new ChatMessage("system", "You are a product analyst.");
+    ChatMessage userMessage = new ChatMessage("user", "Analyze the following product specifications and provide a detailed review with pros and cons. List reasons why the product is good and why it might be prone to malfunction: " + technicalSpecs);
+
+    List<ChatMessage> messages = new ArrayList<>();
+messages.add(systemMessage);
+messages.add(userMessage);
+
+    ChatRequest chatRequest = new ChatRequest("gpt-3.5-turbo", messages);
+
 }

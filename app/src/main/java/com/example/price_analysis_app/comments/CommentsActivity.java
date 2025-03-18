@@ -20,6 +20,8 @@ import com.example.price_analysis_app.Account.SessionManager;
 import com.example.price_analysis_app.Items.Item;
 import com.example.price_analysis_app.R;
 
+import retrofit2.Retrofit;
+
 public class CommentsActivity extends AppCompatActivity {
     private String productCode;
     private Item item;
@@ -39,7 +41,6 @@ private Button createComment;
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
         Account currentAccount = SessionManager.getCurrentAccount();
         String accountName = currentAccount.getUsername();
 
