@@ -15,42 +15,58 @@
         android:theme="@style/Theme.PriceAnalysisApp"
         tools:targetApi="31">
         <activity
+            android:name=".OpenAI.AnalysisStubActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+        <activity
             android:name=".Account.bookmarkAdapter"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Account.BookmarkActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Account.RegisterActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Account.LoginActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".comments.CommentsActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".comments.CommentsStub"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".comments.CommentAdapter"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".uiStuff.TestActivity"
             android:exported="false"
             android:label="@string/title_activity_test"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.PriceAnalysisApp.NoActionBar" />
         <activity
             android:name=".Items.ItemAdapter"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Items.Technical"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Links.LinkAdapter"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".uiStuff.HomeActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -60,6 +76,7 @@
         </activity>
         <activity
             android:name=".Items.ItemDisplay"
+            android:screenOrientation="portrait"
             android:exported="false" />
     </application>
 

@@ -72,21 +72,20 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //get database
-        db = FirebaseFirestore.getInstance();
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
         EdgeToEdge.enable(this);
+
         //link activity
         setContentView(R.layout.activity_home);
         //list of house appliances
         List<String> collectionNames = Arrays.asList(new String("combine_frigorifice"), new String("masini_spalat_rufe"), new String("cuptoare_incorporabile"));
         optionsSp = findViewById(R.id.spinnerOptions);
-
-
-        //set list of items
+        //create adapter
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, collectionNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         optionsSp.setAdapter(adapter);
-        //idk dar e legat de drawer activity
+        db = FirebaseFirestore.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -124,6 +123,7 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
 
 //search bar
         searchBar = findViewById(R.id.searchBar);
+
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -184,6 +184,7 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
 
             }
         });
+
         //ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemList.stream().map(Item::getName).distinct().collect(Collectors.toList()));
 
         rvItems.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
@@ -240,6 +241,8 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
                     // Log.d("Firestore",g.toString());
                     //itemList.add(item);
                 }
+                filteredItems.clear();
+                filteredItems.addAll(itemList);
                 itemAdapter.notifyDataSetChanged();
 
             } else {
