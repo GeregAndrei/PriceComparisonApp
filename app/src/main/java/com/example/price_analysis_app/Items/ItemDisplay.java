@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -26,6 +28,10 @@ import com.example.price_analysis_app.Account.Account;
 import com.example.price_analysis_app.Account.SessionManager;
 import com.example.price_analysis_app.Links.Link;
 import com.example.price_analysis_app.Links.LinkAdapter;
+import com.example.price_analysis_app.OpenAI.ChatMessage;
+import com.example.price_analysis_app.OpenAI.ChatRequest;
+import com.example.price_analysis_app.OpenAI.ChatResponse;
+import com.example.price_analysis_app.OpenAI.ChatGPTService;
 import com.example.price_analysis_app.comments.Comment;
 import com.example.price_analysis_app.comments.CommentAdapter;
 import com.example.price_analysis_app.R;
@@ -35,17 +41,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.DocumentSnapshot;
+
+import org.jsoup.Jsoup;
+
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.Converter.Factory;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class ItemDisplay extends AppCompatActivity implements Icallable {
     private RecyclerView linkList;
@@ -61,9 +74,25 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
     private FirebaseFirestore db;
     String selectedCollection;
    private static List<Comment> commentList = new ArrayList<>();
+    private View analysisView;
    List<String> bookmarks = new ArrayList<>();
+    OkHttpClient client = new OkHttpClient.Builder()
+            .connectTimeout(60, TimeUnit.SECONDS) // Increase connection timeout
+            .readTimeout(60, TimeUnit.SECONDS)    // Increase read timeout
+            .writeTimeout(60, TimeUnit.SECONDS)   // Increase write timeout
+            .build();
+    Retrofit retrofit = new Retrofit.Builder()
+            .baseUrl("https://api.openai.com/")
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build();
 
+    ChatGPTService chatGPTService = retrofit.create(ChatGPTService.class);
 
+    public interface ChatGPTCallback {
+        void onResponse(String response);
+        void onError(Throwable t);
+    }
 
 
     @Override
@@ -83,6 +112,7 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
         selectedCollection = getIntent().getStringExtra("selectedOption");
         // Retrieve the selected item passed from the previous activity
         Item selectedObject = (Item) getIntent().getParcelableExtra("selectedObject");
+
         Log.d("UUUUUUUUUUUUUUU", selectedObject.getDocId());
         name = findViewById(R.id.titleItemTv);
         img = findViewById(R.id.imageView2);
@@ -197,6 +227,16 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
                 }
         );
 
+
+
+        Button analyzeButton = findViewById(R.id.analyzeButton);
+
+        analyzeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showAnalysis(selectedObject);
+            }
+        });
 
 
     }
@@ -382,13 +422,103 @@ private void fetchCommentsFromFirestore(String collectionName, String docId) {
             startActivity(intent);
 
     }
-    ChatMessage systemMessage = new ChatMessage("system", "You are a product analyst.");
-    ChatMessage userMessage = new ChatMessage("user", "Analyze the following product specifications and provide a detailed review with pros and cons. List reasons why the product is good and why it might be prone to malfunction: " + technicalSpecs);
 
-    List<ChatMessage> messages = new ArrayList<>();
-messages.add(systemMessage);
-messages.add(userMessage);
+    private void showAnalysis(Item selectedObject) {
+        // Inflate the ViewStub as before
+        if(analysisView == null){
+        ViewStub stub = findViewById(R.id.analysisStub);
+       analysisView = stub.inflate();
 
-    ChatRequest chatRequest = new ChatRequest("gpt-3.5-turbo", messages);
+        Button closeButton = analysisView.findViewById(R.id.closeAnalysis);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeAnalysis();
+            }
+        });
+    } else {
+        // If already inflated, simply make it visible
+        analysisView.setVisibility(View.VISIBLE);
+    }
+        final ProgressBar loadingIndicator = analysisView.findViewById(R.id.loadingIndicator);
+        final TextView analysisTextView = analysisView.findViewById(R.id.analysisTextView);
+        loadingIndicator.setVisibility(View.VISIBLE);
 
+        // Get the technical details from your selected object
+        String technicalHtml = selectedObject.getTechnicalChar();
+        String plainTechnicalDetails = Jsoup.parse(technicalHtml).text();
+
+        // Build the prompt
+        String prompt = "Analyze the following product technical specifications and provide a detailed review with pros and cons. " +
+                "List reasons why the product is good and potential issues it might have:\n\n" + plainTechnicalDetails;
+
+        // Call your ChatGPT API asynchronously
+        getChatGPTResponse(new ChatGPTCallback() {
+            @Override
+            public void onResponse(String response) {
+                loadingIndicator.setVisibility(View.GONE);
+                animateText(analysisTextView, response);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                loadingIndicator.setVisibility(View.GONE);
+                Log.e("HUUUUH",t.toString());
+                analysisTextView.setText("Error fetching analysis.");
+
+            }
+        }, prompt);
+    }
+
+    private void getChatGPTResponse(final ChatGPTCallback callback, String prompt) {
+        ChatMessage systemMessage = new ChatMessage("system", "You are a product analyst.");
+        ChatMessage userMessage = new ChatMessage("user", prompt);
+
+        List<ChatMessage> messages = new ArrayList<>();
+        messages.add(systemMessage);
+        messages.add(userMessage);
+
+        ChatRequest chatRequest = new ChatRequest("gpt-4o", messages);
+
+        chatGPTService.getChatResponse(chatRequest).enqueue(new Callback<ChatResponse>() {
+            @Override
+            public void onResponse(Call<ChatResponse> call, Response<ChatResponse> response) {
+                if(response.isSuccessful() && response.body() != null) {
+                    // Assuming the first choice contains the response text
+                    String analysis = response.body().getChoices().get(0).getMessage().getContent();
+                    callback.onResponse(analysis);
+                    Log.d("Error",response.toString());
+                } else {
+                    callback.onError(new Exception("Error in API response"));
+                    Log.d("Error",response.toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ChatResponse> call, Throwable t) {
+                callback.onError(t);
+                Log.d("Error",t.toString());
+            }
+        });
+    }
+
+    private void animateText(final TextView textView, final String text) {
+        textView.setText("");
+        final int length = text.length();
+        final Handler handler = new Handler();
+        for (int i = 0; i < length; i++) {
+            final int index = i;
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    textView.append(String.valueOf(text.charAt(index)));
+                }
+            }, 25 * i);  // Adjust delay (50ms) per character as desired
+        }
+    }
+    private void closeAnalysis() {
+        if (analysisView != null) {
+            analysisView.setVisibility(View.GONE);
+        }
+    }
 }
