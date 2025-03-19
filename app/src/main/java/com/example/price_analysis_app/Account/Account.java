@@ -16,7 +16,7 @@ public class Account implements Parcelable {
     private String password;
     public List<String> bookmarkedItems=new ArrayList<>();
     public Account() {
-        // Default constructor required for Firestore
+
         adminStatus=false;
         id="";
         username="";

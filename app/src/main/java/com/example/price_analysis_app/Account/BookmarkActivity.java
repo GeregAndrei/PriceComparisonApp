@@ -2,6 +2,8 @@ package com.example.price_analysis_app.Account;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +19,7 @@ import com.example.price_analysis_app.Items.ItemAdapter;
 import com.example.price_analysis_app.Items.ItemDisplay;
 import com.example.price_analysis_app.Links.Link;
 import com.example.price_analysis_app.R;
+import com.example.price_analysis_app.uiStuff.DrawerActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldPath;
@@ -33,7 +36,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BookmarkActivity extends AppCompatActivity implements Icallable2 {
+public class BookmarkActivity extends DrawerActivity implements Icallable2 {
     Account account;
     List<Item> bookmarkedItems = new ArrayList<>();
     List<TemporaryClass> temporaryClassList=new ArrayList<>();
@@ -58,30 +61,31 @@ public class BookmarkActivity extends AppCompatActivity implements Icallable2 {
         rvBookmarks.setLayoutManager(new LinearLayoutManager(this));
         db = FirebaseFirestore.getInstance();
 
-        // Initialize the adapter with an empty list initially
+
         itemAdapter = new BookmarkAdapter(this, bookmarkedItems);
         rvBookmarks.setAdapter(itemAdapter);
 
         if (account == null) {
-            // Handle the case where account is null
-
+            Log.e("BookmarkActivity", "Account is null");
+            Toast.makeText(this, "Not logged In", Toast.LENGTH_SHORT).show();
             return;
         }
-//// Inside BookmarkActivity's onCreate:
-        String currentUserId = mAuth.getUid(); // Replace with actual current user id
+
+        String currentUserId = mAuth.getUid();
 
         DocumentReference accountRef = db.collection("conturi").document(currentUserId);
         accountRef.addSnapshotListener((snapshot, e) -> {
             if (e != null || snapshot == null || !snapshot.exists()) {
-                // Handle error
+
+                Log.e("BookmarkActivity", "Error getting account document", e);
                 return;
             }
-            // Get the updated list of bookmarked product codes.
+
             List<String> bookmarkedIds = (List<String>) snapshot.get("bookmarkedItems");
             if (bookmarkedIds == null) {
                 bookmarkedIds = new ArrayList<>();
             }
-            // Query and update the bookmarks list
+
             loadBookmarkedItems(bookmarkedIds);
         });
 
@@ -89,7 +93,7 @@ public class BookmarkActivity extends AppCompatActivity implements Icallable2 {
     }
 
     private void loadBookmarkedItems(List<String> bookmarkedIds) {
-        // Clear current list
+
         bookmarkedItems.clear();
         temporaryClassList.clear();
         if (bookmarkedIds.isEmpty()) {
@@ -123,11 +127,11 @@ public class BookmarkActivity extends AppCompatActivity implements Icallable2 {
                     itemAdapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
-                    // Handle errors
+                    Log.e("BookmarkActivity", "Error getting documents: ", e);
                 });
 
         db.collection("cuptoare_incorporabile")
-                .whereIn(FieldPath.documentId(),bookmarkedIds)  // Assuming your items have documentId field
+                .whereIn(FieldPath.documentId(),bookmarkedIds)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     for (DocumentSnapshot documentSnapshot : querySnapshot) {
@@ -153,11 +157,11 @@ public class BookmarkActivity extends AppCompatActivity implements Icallable2 {
                     itemAdapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
-                    // Handle errors
+                    Log.e("BookmarkActivity", "Error getting documents: ", e);
                 });
 
         db.collection("masini_spalat_rufe")
-                .whereIn(FieldPath.documentId(),bookmarkedIds)  // Assuming your items have documentId field
+                .whereIn(FieldPath.documentId(),bookmarkedIds)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     for (DocumentSnapshot documentSnapshot : querySnapshot) {
@@ -181,7 +185,7 @@ public class BookmarkActivity extends AppCompatActivity implements Icallable2 {
                     itemAdapter.notifyDataSetChanged();
                 })
                 .addOnFailureListener(e -> {
-                    // Handle errors
+                   Log.e("BookmarkActivity", "Error getting documents: ", e);
                 });
     }
     public Link fromString(String linkString) {
@@ -249,7 +253,6 @@ public class BookmarkActivity extends AppCompatActivity implements Icallable2 {
 
         intent.putExtra("selectedOption", collectionName);
 
-        //System.out.println("before being sent "+filteredItems.get(position).getLinkList().get(0).toString());
         startActivity(intent);
     }
 

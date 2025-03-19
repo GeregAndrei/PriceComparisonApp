@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.price_analysis_app.R;
+import com.example.price_analysis_app.uiStuff.DrawerActivity;
 import com.example.price_analysis_app.uiStuff.HomeActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,7 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends DrawerActivity {
 
 Account account=SessionManager.getCurrentAccount();
     @Override
@@ -42,7 +43,13 @@ Account account=SessionManager.getCurrentAccount();
         EditText usernameEditText = findViewById(R.id.loginUsername);
         EditText passwordEditText = findViewById(R.id.loginPassword);
 
-
+        Button register=findViewById(R.id.btnRegister);
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            }
+        });
         Button loginButton = findViewById(R.id.btnLogIn);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +93,7 @@ Account account=SessionManager.getCurrentAccount();
                         Log.e("Authentication", "Authentication failed", task.getException());
                     }
                 });
+
             }
         });
 

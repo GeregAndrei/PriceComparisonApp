@@ -78,9 +78,9 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
     private View analysisView;
    List<String> bookmarks = new ArrayList<>();
     OkHttpClient client = new OkHttpClient.Builder()
-            .connectTimeout(60, TimeUnit.SECONDS) // Increase connection timeout
-            .readTimeout(60, TimeUnit.SECONDS)    // Increase read timeout
-            .writeTimeout(60, TimeUnit.SECONDS)   // Increase write timeout
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
             .build();
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("https://api.openai.com/")
@@ -128,7 +128,6 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
 
         commentAdapter = new CommentAdapter(this, commentList);
         Account currentAccount = SessionManager.getCurrentAccount();
-        //List<String> bookmarks = currentAccount.getBookmarkedItems();
         Button bookmarkItem = findViewById(R.id.bookmarkButton);
         bookmarkItem.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,36 +149,7 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
             Log.d("LOL",selectedObject.toString());
             }
 
-        //dummy list
-
-
-//        commentList.add(new Comment("Alice","1","g","Great product!",5));
-//        commentList.add(new Comment("Bob","1" ,"h","Could be better.", 4));
-
        Button showCommentsButton = findViewById(R.id.showCommentsButton);
-//        showCommentsButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (!isCommentsInflated) {
-//
-//                    ViewStub stub = findViewById(R.id.commentsViewStub);
-//                    commentsView = stub.inflate();
-//                    RecyclerView commentsRv = commentsView.findViewById(R.id.commentsRv);
-//
-//                    commentsRv.setLayoutManager(new LinearLayoutManager(ItemDisplay.this));
-//                    commentsRv.setAdapter(commentAdapter);
-//
-//                    isCommentsInflated = true;
-//                    fetchCommentsFromFirestore(selectedCollection, selectedObject.getDocId());
-//                } else {
-//                    if (commentsView.getVisibility() == View.VISIBLE) {
-//                        commentsView.setVisibility(View.GONE);
-//                    } else {
-//                        commentsView.setVisibility(View.VISIBLE);
-//                    }
-//                }
-//            }
-//        });
         showCommentsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,7 +188,7 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
                         Intent data = result.getData();
                         if (data != null) {
                             Comment newComment = data.getParcelableExtra("newComment");
-                            // Assuming selectedObject is available (e.g., passed to this activity)
+
 
                             selectedObject.addComment(newComment);
                             commentAdapter.notifyDataSetChanged();
@@ -308,16 +278,14 @@ private void fetchCommentsFromFirestore(String collectionName, String docId) {
             .get()
             .addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot.exists()) {
-                    // Retrieve the "comments" field as an array of maps
                     List<Map<String, Object>> commentsField =
                             (List<Map<String, Object>>) documentSnapshot.get("comments");
 
-                    // Temporary list to hold the comments we parse
                     List<Comment> tempComments = new ArrayList<>();
 
                     if (commentsField != null && !commentsField.isEmpty()) {
                         for (Map<String, Object> commentMap : commentsField) {
-                            // Extract each field from the map
+
                             String accountName = (String) commentMap.get("accountName");
                             String accountId = (String) commentMap.get("accountId");
                             String description = (String) commentMap.get("description");
@@ -332,13 +300,13 @@ private void fetchCommentsFromFirestore(String collectionName, String docId) {
                         }
                     }
                     if (tempComments.isEmpty()) {
-                        // Clear any previous comments and notify the adapter
+
                         commentList.clear();
                         commentAdapter.notifyDataSetChanged();
-                        // Optionally, inform the user
+
                         Toast.makeText(ItemDisplay.this, "No comments available for this item", Toast.LENGTH_SHORT).show();
                     } else {
-                        // Update your list and adapter normally
+
                         commentList.clear();
                         commentList.addAll(tempComments);
                         commentAdapter.notifyDataSetChanged();
@@ -432,7 +400,7 @@ private void fetchCommentsFromFirestore(String collectionName, String docId) {
     }
 
     private void showAnalysis(Item selectedObject) {
-        // Inflate the ViewStub as before
+
         if(analysisView == null){
         ViewStub stub = findViewById(R.id.analysisStub);
        analysisView = stub.inflate();
@@ -445,22 +413,20 @@ private void fetchCommentsFromFirestore(String collectionName, String docId) {
             }
         });
     } else {
-        // If already inflated, simply make it visible
         analysisView.setVisibility(View.VISIBLE);
     }
         final ProgressBar loadingIndicator = analysisView.findViewById(R.id.loadingIndicator);
         final TextView analysisTextView = analysisView.findViewById(R.id.analysisTextView);
         loadingIndicator.setVisibility(View.VISIBLE);
 
-        // Get the technical details from your selected object
         String technicalHtml = selectedObject.getTechnicalChar();
         String plainTechnicalDetails = Jsoup.parse(technicalHtml).text();
 
-        // Build the prompt
+
         String prompt = "Analyze the following product technical specifications and provide a detailed review with pros and cons. " +
                 "List reasons why the product is good and potential issues it might have:\n\n" + plainTechnicalDetails;
 
-        // Call your ChatGPT API asynchronously
+
         getChatGPTResponse(new ChatGPTCallback() {
             @Override
             public void onResponse(String response) {
@@ -492,7 +458,6 @@ private void fetchCommentsFromFirestore(String collectionName, String docId) {
             @Override
             public void onResponse(Call<ChatResponse> call, Response<ChatResponse> response) {
                 if(response.isSuccessful() && response.body() != null) {
-                    // Assuming the first choice contains the response text
                     String analysis = response.body().getChoices().get(0).getMessage().getContent();
                     callback.onResponse(analysis);
                     Log.d("Error",response.toString());
@@ -521,7 +486,7 @@ private void fetchCommentsFromFirestore(String collectionName, String docId) {
                 public void run() {
                     textView.append(String.valueOf(text.charAt(index)));
                 }
-            }, 25 * i);  // Adjust delay (50ms) per character as desired
+            }, 25 * i);
         }
     }
     private void closeAnalysis() {

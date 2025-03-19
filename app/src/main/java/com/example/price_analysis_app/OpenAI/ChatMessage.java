@@ -1,7 +1,7 @@
 package com.example.price_analysis_app.OpenAI;
 
 public class ChatMessage {
-    private String role;   // e.g., "system", "user", "assistant"
+    private String role;
     private String content;
 
     public ChatMessage(String role, String content) {

@@ -12,49 +12,43 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@drawable/item_border">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="5"
-            android:orientation="horizontal">
+            android:layout_weight="3.4"
+            android:orientation="horizontal"
+            android:background="@drawable/item_border">
 
             <Button
                 android:id="@+id/buttonMenu"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.1"
-                android:text="Button" />
 
-            <Button
-                android:id="@+id/buttonRegister"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.1"
-                android:text="Button" />
+                android:text="Menu"
+                android:textSize="14sp"
+                />
 
-            <Button
-                android:id="@+id/BOOKMARKS"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.1"
-                android:text="Button" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@drawable/item_border">
 
             <AutoCompleteTextView
                 android:id="@+id/searchBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#0B2ACA"
+                android:backgroundTint="@color/black"
                 android:hint="@string/searchBarHint"
-                android:inputType="text" />
+                android:inputType="text"
+
+                />
 
         </LinearLayout>
 
@@ -64,10 +58,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-
+        android:background="@color/light_grey"
         >
 
         <Spinner
+            android:background="@drawable/item_border"
             android:id="@+id/spinnerOptions"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -81,6 +76,20 @@
         >
 
     </androidx.recyclerview.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/BOOKMARKS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:text="Button" />
+
+    <Button
+        android:id="@+id/buttonRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:text="Button" />
 
 
 </LinearLayout>

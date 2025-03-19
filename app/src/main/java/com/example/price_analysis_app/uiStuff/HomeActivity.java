@@ -36,6 +36,7 @@ import com.example.price_analysis_app.Items.ItemDisplay;
 import com.example.price_analysis_app.Links.Link;
 
 import com.example.price_analysis_app.R;
+import com.example.price_analysis_app.TempMenu;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -49,7 +50,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class HomeActivity extends AppCompatActivity implements Icallable {
+public class HomeActivity extends DrawerActivity implements Icallable {
     private EditText searchBar;
 
 
@@ -100,7 +101,7 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                testDrawer2();
+                testDrawer();
             }
         });
 
@@ -316,20 +317,15 @@ public class HomeActivity extends AppCompatActivity implements Icallable {
         Intent intent = new Intent(this, ItemDisplay.class);
         intent.putExtra("selectedObject", filteredItems.get(position));
         intent.putExtra("selectedOption", selectedOption);
-
-        //System.out.println("before being sent "+filteredItems.get(position).getLinkList().get(0).toString());
         startActivity(intent);
     }
 
     public void testDrawer() {
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, TempMenu.class);
         startActivity(intent);
     }
 
-    public void testDrawer2() {
-        Intent intent = new Intent(this, RegisterActivity.class);
-        startActivity(intent);
-    }
+
 
     @Override
     public void onLinkClicked(Link position) {

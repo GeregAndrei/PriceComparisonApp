@@ -58,27 +58,26 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
 
                     if (task.isSuccessful()) {
-                        // Registration success, get the new FirebaseUser
+
                         FirebaseUser firebaseUser = mAuth.getCurrentUser();
                         if (firebaseUser != null) {
-                            // Create your custom Account object with additional details
+
                             Account account = new Account();
                             account.setUsername(username);
                             account.setEmail(email);
-                            // Caution: Storing plain text passwords is not recommended in production.
+
                             account.setPassword(password);
                             account.setBookmarkedItems(new ArrayList<>());
                             account.setId("1234567890");
-                            // Optionally, set an ID if you have a method for generating one
-                            // account.setId(...);
 
-                            // Save additional user details in Firestore using the Firebase UID as the document ID
+
+
                             db.collection("conturi").document(firebaseUser.getUid())
                                     .set(account)
                                     .addOnSuccessListener(aVoid -> {
-                                        // Optionally, store the account in a session manager for global access
+
                                         SessionManager.setCurrentAccount(account);
-                                        // Navigate to the home screen or next activity
+
                                         startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
                                         finish();
                                     })
@@ -87,7 +86,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     });
                         }
                     } else {
-                        // Registration failed; display an error message
+
                         Toast.makeText(RegisterActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
