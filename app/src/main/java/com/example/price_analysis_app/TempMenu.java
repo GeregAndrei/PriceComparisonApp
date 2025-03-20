@@ -32,6 +32,7 @@ public class TempMenu extends AppCompatActivity {
         Button buttonHome=findViewById(R.id.btnHome);
         Button buttonAccount=findViewById(R.id.btnAccount);
         Button buttonBookmarks=findViewById(R.id.btnBookmarks);
+
         buttonHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

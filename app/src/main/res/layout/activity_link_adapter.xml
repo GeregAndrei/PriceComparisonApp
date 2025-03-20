@@ -11,15 +11,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@drawable/item_border2">
 
         <TextView
             android:id="@+id/URLtv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:hint="@string/linkHint"
-            android:text="TextView"
+
+            android:text="@string/linkHintEn"
             android:textColor="#1414DB"
             android:textSize="21sp" />
 

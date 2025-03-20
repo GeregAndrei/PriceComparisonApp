@@ -82,8 +82,9 @@ public class HomeActivity extends DrawerActivity implements Icallable {
         List<String> collectionNames = Arrays.asList(new String("combine_frigorifice"), new String("masini_spalat_rufe"), new String("cuptoare_incorporabile"));
         optionsSp = findViewById(R.id.spinnerOptions);
         //create adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, collectionNames);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.spinner_item, R.id.spinner_item_text, collectionNames);
+        adapter.setDropDownViewResource(R.layout.spinner_item);
         optionsSp.setAdapter(adapter);
         db = FirebaseFirestore.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();

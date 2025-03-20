@@ -154,17 +154,14 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
             @Override
             public void onClick(View v) {
                 if (!isCommentsInflated) {
-                    // Inflate the view and set up the RecyclerView
                     ViewStub stub = findViewById(R.id.commentsViewStub);
                     commentsView = stub.inflate();
                     RecyclerView commentsRv = commentsView.findViewById(R.id.commentsRv);
                     commentsRv.setLayoutManager(new LinearLayoutManager(ItemDisplay.this));
                     commentsRv.setAdapter(commentAdapter);
                     isCommentsInflated = true;
-                    // Fetch comments only once
                     fetchCommentsFromFirestore(selectedCollection, selectedObject.getDocId());
                 } else {
-                    // Just toggle visibility without re-fetching
                     if (commentsView.getVisibility() == View.VISIBLE) {
                         commentsView.setVisibility(View.GONE);
                     } else {
@@ -173,6 +170,13 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
                 }
             }
         });
+        Button closeCommentsButton = findViewById(R.id.buttonCloseComment);
+        closeCommentsButton.setOnClickListener(new View.OnClickListener() {
+                                                   @Override
+                                                   public void onClick(View v) {
+                                                       commentsView.setVisibility(View.GONE);
+                                                   }
+                                               });
 
         Button addcomment =findViewById(R.id.buttonAddComment);
         addcomment.setOnClickListener(new View.OnClickListener() {
@@ -211,20 +215,8 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
 
 
     }
-
-//    private void pushCommentToFirebase(String documentId, Comment comment) {
-//
-//        DocumentReference docRef = db.collection(selectedCollection).document(documentId);
-//                        Map<String, Object> data = new HashMap<>();
-//                        data.put("comments", FieldValue.arrayUnion(comment.toString()));
-//
-//                        docRef.update("comments", FieldValue.arrayUnion(comment.toString()))
-//                                .addOnSuccessListener(aVoid -> Log.d("Firestore", "Comment added successfully"))
-//                                .addOnFailureListener(e -> Log.e("Firestore", "Error adding comment", e));
-//                    }
 private void pushCommentToFirebase(String documentId, Comment comment) {
     DocumentReference docRef = db.collection(selectedCollection).document(documentId);
-    // Build a map for the new comment
     Map<String, Object> commentMap = new HashMap<>();
     commentMap.put("accountName", comment.getAccountName());
     commentMap.put("accountId", currentAccount.getId());
@@ -232,7 +224,6 @@ private void pushCommentToFirebase(String documentId, Comment comment) {
     commentMap.put("description", comment.getDescription());
     commentMap.put("bar", comment.getBar());
 
-    // Use arrayUnion to append the map to the "comments" array
     docRef.update("comments", FieldValue.arrayUnion(commentMap))
             .addOnSuccessListener(aVoid -> Log.d("Firestore", "Comment added successfully"))
             .addOnFailureListener(e -> Log.e("Firestore", "Error adding comment", e));
@@ -245,32 +236,7 @@ private void pushCommentToFirebase(String documentId, Comment comment) {
         intent.putExtra("itemforcomment",selectedObject);
         commentActivityLauncher.launch(intent);
     }
-//    private void fetchCommentsFromFirestore(String collectionName, String docId) {
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        db.collection(collectionName)
-//                .document(docId)
-//                .get()
-//                .addOnSuccessListener(queryDocumentSnapshots -> {
-//                    List<Comment> tempComments = new ArrayList<>();
-//                    for (DocumentSnapshot doc : ) {
-//                        // Retrieve the specific fields
-//                        String accountName = doc.getString("accountName");
-//                        String description = doc.getString("description");
-//                        Double barDouble = doc.getDouble("bar");
-//
-//                        float bar = (barDouble != null) ? barDouble.floatValue() : 0f;
-//                        Comment comment = new Comment(accountName, docId, description, bar);
-//                        tempComments.add(comment);
-//
-//                    }
-//
-//                    // Update your adapter's list and notify changes
-//                    commentList.clear();
-//                    commentList.addAll(tempComments);
-//                    commentAdapter.notifyDataSetChanged();
-//                })
-//                .addOnFailureListener(e -> Log.e("Firestore", "Error fetching comments", e));
-//    }
+
 private void fetchCommentsFromFirestore(String collectionName, String docId) {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     db.collection(collectionName)
@@ -333,12 +299,10 @@ private void fetchCommentsFromFirestore(String collectionName, String docId) {
                         List<String> bookmarks = (List<String>) documentSnapshot.get("bookmarkedItems");
 
                         if (bookmarks != null && bookmarks.contains(selectedObject.getDocId())) {
-                            // Item exists, remove it using FieldValue.arrayRemove()
                                 accountDocRef.update("bookmarkedItems", FieldValue.arrayRemove(selectedObject.getDocId()))
                                     .addOnSuccessListener(aVoid -> Log.d("Firestore", "Item removed from bookmarks"))
                                     .addOnFailureListener(e -> Log.e("Firestore", "Error removing item from bookmarks", e));
                         } else {
-                            // Item doesn't exist, add it using FieldValue.arrayUnion()
                             accountDocRef.update("bookmarkedItems", FieldValue.arrayUnion(selectedObject.getDocId()))
                                     .addOnSuccessListener(aVoid -> Log.d("Firestore", "Item added to bookmarks"))
                                     .addOnFailureListener(e -> Log.e("Firestore", "Error adding item to bookmarks", e));
@@ -348,34 +312,6 @@ private void fetchCommentsFromFirestore(String collectionName, String docId) {
                     }
                 })
                 .addOnFailureListener(e -> Log.e("Firestore", "Error fetching account document", e));
-        //        if (db.collection("conturi").document(firebaseUser.getUid()).collection("bookmarkedItems").contains(selectedObject.productCode)) {
-//            // Remove the item from bookmarks
-//            db.collection("conturi").document(firebaseUser.getUid())
-//                    .update("bookmarkedItems", FieldValue.arrayRemove(selectedObject.productCode))
-//                    .addOnSuccessListener(aVoid -> {
-//                        // Update local state if necessary
-//                        //currentAccount.getBookmarkedItems().remove(selectedObject);
-//                        Log.d("Firestore", "Item removed from bookmarks");
-//                    })
-//                    .addOnFailureListener(e -> {
-//                        // Handle failure
-//                        Log.e("Firestore", "Error removing item from bookmarks", e);
-//                    });
-//        } else {
-//            // Add the item to bookmarks
-//            db.collection("conturi").document(firebaseUser.getUid())
-//                    .update("bookmarkedItems", FieldValue.arrayUnion(selectedObject.productCode))
-//                    .addOnSuccessListener(aVoid -> {
-//                        // Update local state if necessary
-//                        //currentAccount.getBookmarkedItems().add(selectedObject.productCode);
-//                        Log.d("Firestore", "Item added to bookmarks");
-//                    })
-//                    .addOnFailureListener(e -> {
-//                        // Handle failure
-//                        Log.e("Firestore", "Error adding item to bookmarks", e);
-//                    });
-//
-//        }
     }
 
     private void openDetailView(Item selectedObject) {
@@ -486,7 +422,7 @@ private void fetchCommentsFromFirestore(String collectionName, String docId) {
                 public void run() {
                     textView.append(String.valueOf(text.charAt(index)));
                 }
-            }, 25 * i);
+            }, 15 * i);
         }
     }
     private void closeAnalysis() {

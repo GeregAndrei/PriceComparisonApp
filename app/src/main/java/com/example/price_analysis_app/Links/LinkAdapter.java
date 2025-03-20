@@ -43,8 +43,6 @@ private static List<Link> linkList=new ArrayList<>();
     public void onBindViewHolder(@NonNull LinkHolder holder, int position) {
         Link link = linkList.get(position);
         System.out.println("object is oK?" +link.toString());
-
-        holder.URL.setText("apasa aici pentru link");
         holder.URL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
