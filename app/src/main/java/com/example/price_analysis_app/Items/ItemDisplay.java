@@ -422,7 +422,7 @@ private void fetchCommentsFromFirestore(String collectionName, String docId) {
                 public void run() {
                     textView.append(String.valueOf(text.charAt(index)));
                 }
-            }, 15 * i);
+            }, 10 * i);
         }
     }
     private void closeAnalysis() {

@@ -221,38 +221,39 @@ public class HomeActivity extends DrawerActivity implements Icallable {
 
     //item retrieving functionality from the database --maybe change
     private void retrieveItems(String collection) {
-        db.collection(collection).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                itemList.clear();
-                System.out.println("searched");
-                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                    List<String> g = (ArrayList<String>) documentSnapshot.get("linkList");
+        new Thread(() -> {
+            db.collection(collection).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    itemList.clear();
+                    System.out.println("searched");
+                    for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                        List<String> g = (ArrayList<String>) documentSnapshot.get("linkList");
 
-                    String name = (String) documentSnapshot.get("name");
-                    String imgUrl = (String) documentSnapshot.get("imgUrl");
-                    String productCode = (String) documentSnapshot.get("productCode");
-                    String technicalChar = (String) documentSnapshot.get("technicalChar");
-                    String documentId = (String) documentSnapshot.getId();
-                    List<Link> links = new ArrayList<>();
-                    for (String h : g) {
-                        Link temp = fromString(h);
-                        links.add(temp);
+                        String name = (String) documentSnapshot.get("name");
+                        String imgUrl = (String) documentSnapshot.get("imgUrl");
+                        String productCode = (String) documentSnapshot.get("productCode");
+                        String technicalChar = (String) documentSnapshot.get("technicalChar");
+                        String documentId = (String) documentSnapshot.getId();
+                        List<Link> links = new ArrayList<>();
+                        for (String h : g) {
+                            Link temp = fromString(h);
+                            links.add(temp);
+                        }
+                        Item item = new Item(name, productCode, links, imgUrl, technicalChar, documentId);
+                        itemList.add(item);
+                        // Log.d("Firestore",g.toString());
+                        //itemList.add(item);
                     }
-                    Item item = new Item(name, productCode, links, imgUrl, technicalChar, documentId);
-                    itemList.add(item);
-                    // Log.d("Firestore",g.toString());
-                    //itemList.add(item);
+                    filteredItems.clear();
+                    filteredItems.addAll(itemList);
+                    itemAdapter.notifyDataSetChanged();
+
+                } else {
+                    Log.w("FireStore", "Error getting items", task.getException());
                 }
-                filteredItems.clear();
-                filteredItems.addAll(itemList);
-                itemAdapter.notifyDataSetChanged();
 
-            } else {
-                Log.w("FireStore", "Error getting items", task.getException());
-            }
-
-        });
-
+            });
+        }).start();
     }
 
     //transforming item from string
