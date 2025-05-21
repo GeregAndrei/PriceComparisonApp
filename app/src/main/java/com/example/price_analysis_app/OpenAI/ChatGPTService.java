@@ -9,7 +9,7 @@ public interface ChatGPTService {
 
         @Headers({
                 "Content-Type: application/json",
-                "Authorization: Bearer "
+                "Authorization: "
         })
         @POST("v1/chat/completions")
         Call<ChatResponse> getChatResponse(@Body ChatRequest request);
