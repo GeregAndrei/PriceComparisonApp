@@ -341,6 +341,7 @@ private void fetchCommentsFromFirestore(String collectionName, String docId) {
         ViewStub stub = findViewById(R.id.analysisStub);
        analysisView = stub.inflate();
 
+       Log.d("UUUUUUUUUUUUUUU", selectedObject.getName().toString());
         Button closeButton = analysisView.findViewById(R.id.closeAnalysis);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override

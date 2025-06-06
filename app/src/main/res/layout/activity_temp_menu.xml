@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TempMenu"
-    android:background="@color/darker_green">
+    android:background="@color/lighter_blue">
 
     <Button
         android:id="@+id/btnHome"

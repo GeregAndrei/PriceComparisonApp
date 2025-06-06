@@ -54,6 +54,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemHolder> {
         Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).into(holder.imgUrl);
         if (link != null) {
             holder.priceAndSite.setText(link.getPrice() + "lei on " + link.getName());
+
         } else {
             holder.priceAndSite.setText("No link available");
         }
