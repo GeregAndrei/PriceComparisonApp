@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
 
 public class HomeActivity extends DrawerActivity implements Icallable {
     private EditText searchBar;
-
+//comments close button, add more sites, more products,change comment to have an id, name should not be hard coded for collections
 
     public HomeActivity() throws MalformedURLException {
     }
@@ -79,7 +79,7 @@ public class HomeActivity extends DrawerActivity implements Icallable {
         //link activity
         setContentView(R.layout.activity_home);
         //list of house appliances
-        List<String> collectionNames = Arrays.asList(new String("combine_frigorifice"), new String("masini_spalat_rufe"), new String("cuptoare_incorporabile"));
+        List<String> collectionNames = Arrays.asList(new String("produse"));
         optionsSp = findViewById(R.id.spinnerOptions);
         //create adapter
 
@@ -258,18 +258,22 @@ public class HomeActivity extends DrawerActivity implements Icallable {
 
     //transforming item from string
     public Link fromString(String linkString) {
-
+        // → match the URL
         Pattern siteLinkPattern = Pattern.compile("siteLink='(https?://[^']+)'");
-        Pattern namePattern = Pattern.compile("name='([^']*)'");
-        Pattern pricePattern = Pattern.compile("price='([0-9.,]+) Lei'");
-        Pattern pricePattern2 = Pattern.compile("price='([0-9.,]+) RON'");
+        // → match the name
+        Pattern namePattern     = Pattern.compile("name='([^']*)'");
+        // → match price, allowing digits, dots, commas, optional whitespace, then Lei or RON
+        Pattern pricePattern    = Pattern.compile("price='([0-9.,]+)\\s*(?:Lei|RON)'");
+
         Matcher siteLinkMatcher = siteLinkPattern.matcher(linkString);
-        Matcher nameMatcher = namePattern.matcher(linkString);
-        Matcher priceMatcher = pricePattern.matcher(linkString);
-        Matcher priceMatcher2 = pricePattern2.matcher(linkString);
-        URL siteLink = null;
-        String name = null;
-        double price = 0.0;
+        Matcher nameMatcher     = namePattern.matcher(linkString);
+        Matcher priceMatcher    = pricePattern.matcher(linkString);
+
+        URL    siteLink = null;
+        String name     = null;
+        double price    = 0.0;
+
+        // extract URL
         if (siteLinkMatcher.find()) {
             try {
                 siteLink = new URL(siteLinkMatcher.group(1));
@@ -278,39 +282,27 @@ public class HomeActivity extends DrawerActivity implements Icallable {
             }
         }
 
-        // Extract name
+        // extract name
         if (nameMatcher.find()) {
             name = nameMatcher.group(1);
         }
 
-        // Extract price
+        // extract price
         if (priceMatcher.find()) {
-
-            String priceString = priceMatcher.group(1).replace(".", "").replace(",", ".");
-
+            // group(1) is something like "1.299,99"
+            String raw = priceMatcher.group(1)
+                    .replace(".", "")    // remove thousands separator
+                    .replace(",", ".");  // convert decimal comma to dot
             try {
-                price = Double.parseDouble(priceString);
-                //   System.out.println("PRICE IS "+price);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
-        if (priceMatcher2.find()) {
-
-            String priceString = priceMatcher2.group(1).replace(".", "").replace(",", ".");
-
-            try {
-                price = Double.parseDouble(priceString);
-                //   System.out.println("PRICE IS "+price);
+                price = Double.parseDouble(raw);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
         }
 
-        Link result = new Link(siteLink, name, price);
-
-        return result;
+        return new Link(siteLink, name, price);
     }
+
 
 
     //debugging info

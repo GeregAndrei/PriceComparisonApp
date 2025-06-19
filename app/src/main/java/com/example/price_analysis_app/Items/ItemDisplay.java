@@ -115,6 +115,7 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
         Item selectedObject = (Item) getIntent().getParcelableExtra("selectedObject");
 
         Log.d("UUUUUUUUUUUUUUU", selectedObject.getDocId());
+        Log.d("UUUUUUUU",selectedObject.getLinkList().toString());
         name = findViewById(R.id.titleItemTv);
         img = findViewById(R.id.imageView2);
         specs = findViewById(R.id.buttonTechnical);
