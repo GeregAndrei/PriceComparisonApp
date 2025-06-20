@@ -73,21 +73,27 @@ public class HomeActivity extends DrawerActivity implements Icallable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //get database
-
+        db = FirebaseFirestore.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         EdgeToEdge.enable(this);
 
         //link activity
         setContentView(R.layout.activity_home);
         //list of house appliances
-        List<String> collectionNames = Arrays.asList(new String("produse"));
+        List<String> collectionNames = Arrays.asList(new String("combine frigorifice"),
+                new String("aspiratoare"),
+                new String("cuptoare cu microunde"),
+                new String("espressoare automate"),
+                new String("frigidere"),
+                new String("masini de spalat rufe")
+        );
         optionsSp = findViewById(R.id.spinnerOptions);
         //create adapter
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,R.layout.spinner_item, R.id.spinner_item_text, collectionNames);
         adapter.setDropDownViewResource(R.layout.spinner_item);
         optionsSp.setAdapter(adapter);
-        db = FirebaseFirestore.getInstance();
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
