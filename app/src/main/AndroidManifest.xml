@@ -15,6 +15,9 @@
         android:theme="@style/Theme.PriceAnalysisApp"
         tools:targetApi="31">
         <activity
+            android:name=".Menu.CompareActivity"
+            android:exported="false" />
+        <activity
             android:name=".TempMenu"
             android:exported="false" />
         <activity
@@ -62,7 +65,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".uiStuff.HomeActivity"
+            android:name=".Menu.HomeActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -75,7 +78,7 @@
             android:name=".Items.ItemDisplay"
             android:exported="false"
             android:screenOrientation="portrait" />
-        <activity android:name=".uiStuff.DrawerActivity"></activity>
+        <activity android:name=".Menu.DrawerActivity" />
     </application>
 
 </manifest>

@@ -9,20 +9,16 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.price_analysis_app.R;
-import com.example.price_analysis_app.uiStuff.DrawerActivity;
-import com.example.price_analysis_app.uiStuff.HomeActivity;
+import com.example.price_analysis_app.Menu.DrawerActivity;
+import com.example.price_analysis_app.Menu.HomeActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.DocumentSnapshot;
-
-import java.util.ArrayList;
 
 public class LoginActivity extends DrawerActivity {
 

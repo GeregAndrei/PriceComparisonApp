@@ -7,9 +7,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/item_border"
-    tools:context=".uiStuff.HomeActivity">
+    tools:context=".Menu.HomeActivity">
 
-
+    <!-- Top bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,25 +17,23 @@
         android:background="@drawable/item_border">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="3.4"
-            android:background="@drawable/item_border"
-            android:orientation="horizontal">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:orientation="horizontal"
+            android:background="@drawable/item_border">
 
             <Button
                 android:id="@+id/buttonMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:text="Menu"
-                android:textSize="13dp" />
-
+                android:textSize="13sp" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="horizontal"
             android:background="@drawable/item_border">
@@ -46,51 +44,42 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/black"
                 android:hint="@string/searchBarHint"
-                android:inputType="text"
-
-                />
-
+                android:inputType="text" />
         </LinearLayout>
-
     </LinearLayout>
 
+    <!-- Category Spinner -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/light_grey"
-        >
+        android:background="@color/light_grey">
 
         <Spinner
-            android:background="@drawable/item_border"
             android:id="@+id/spinnerOptions"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-
-             />
+            android:background="@drawable/item_border" />
     </LinearLayout>
 
+    <!-- Item List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvItems"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
-    </androidx.recyclerview.widget.RecyclerView>
+    <!-- Bookmarks Button -->
 
+
+    <!-- Compare FAB pinned bottom|end -->
     <Button
-        android:id="@+id/BOOKMARKS"
-        android:layout_width="wrap_content"
+        android:id="@+id/compareFab"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.1"
-        android:text="Button" />
-
-    <Button
-        android:id="@+id/buttonRegister"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.1"
-        android:text="Button" />
-
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:textSize="20dp"
+        android:text="@string/compareButton"></Button>
 
 </LinearLayout>

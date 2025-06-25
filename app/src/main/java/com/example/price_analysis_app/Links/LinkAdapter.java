@@ -49,7 +49,7 @@ private static List<Link> linkList=new ArrayList<>();
             icallable.onLinkClicked(link);
             }
         });
-        holder.name.setText(link.getName());
+        holder.name.setText(link.getSiteName());
         holder.price.setText(String.valueOf(link.getPrice())+" Lei");
     }
 

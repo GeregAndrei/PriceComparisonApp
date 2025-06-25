@@ -6,26 +6,20 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.price_analysis_app.Items.Icallable;
 import com.example.price_analysis_app.Items.Item;
-import com.example.price_analysis_app.Items.ItemAdapter;
 import com.example.price_analysis_app.Items.ItemDisplay;
 import com.example.price_analysis_app.Links.Link;
 import com.example.price_analysis_app.R;
-import com.example.price_analysis_app.uiStuff.DrawerActivity;
+import com.example.price_analysis_app.Menu.DrawerActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldPath;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentSnapshot;
 

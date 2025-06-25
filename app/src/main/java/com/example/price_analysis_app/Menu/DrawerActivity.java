@@ -1,4 +1,4 @@
-package com.example.price_analysis_app.uiStuff;
+package com.example.price_analysis_app.Menu;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +14,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.price_analysis_app.Account.BookmarkActivity;
 import com.example.price_analysis_app.Account.LoginActivity;
-import com.example.price_analysis_app.uiStuff.HomeActivity;
 import com.google.android.material.navigation.NavigationView;
 
 public class DrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {

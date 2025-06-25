@@ -56,11 +56,11 @@ public class Link implements Parcelable {
         this.siteLink = siteLink;
     }
 
-    public String getName() {
+    public String getSiteName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setSiteName(String name) {
         this.name = name;
     }
 

@@ -55,7 +55,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
 
         Glide.with(holder.itemView.getContext()).load(item.getImgUrl()).into(holder.imgUrl);
         if (link != null) {
-            holder.priceAndSite.setText(link.getPrice() + "lei on " + link.getName());
+            holder.priceAndSite.setText(link.getPrice() + "lei on " + link.getSiteName());
         } else {
             holder.priceAndSite.setText("No link available");
         }

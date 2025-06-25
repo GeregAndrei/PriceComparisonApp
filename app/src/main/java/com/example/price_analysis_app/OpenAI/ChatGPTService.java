@@ -1,5 +1,7 @@
 package com.example.price_analysis_app.OpenAI;
 
+import java.util.function.Consumer;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Headers;

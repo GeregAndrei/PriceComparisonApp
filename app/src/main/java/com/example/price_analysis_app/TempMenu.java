@@ -13,8 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.price_analysis_app.Account.BookmarkActivity;
 import com.example.price_analysis_app.Account.LoginActivity;
-import com.example.price_analysis_app.Account.RegisterActivity;
-import com.example.price_analysis_app.uiStuff.HomeActivity;
+import com.example.price_analysis_app.Menu.HomeActivity;
 
 public class TempMenu extends AppCompatActivity {
 

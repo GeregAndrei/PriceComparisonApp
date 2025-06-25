@@ -1,9 +1,7 @@
-package com.example.price_analysis_app.uiStuff;
+package com.example.price_analysis_app.Menu;
 
 import com.example.price_analysis_app.Account.Account;
 import com.example.price_analysis_app.Account.BookmarkActivity;
-import com.example.price_analysis_app.Account.LoginActivity;
-import com.example.price_analysis_app.Account.RegisterActivity;
 import com.example.price_analysis_app.Account.SessionManager;
 import com.example.price_analysis_app.Items.Icallable;
 import com.example.price_analysis_app.Items.Item;
@@ -24,7 +22,6 @@ import android.widget.Spinner;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -37,6 +34,7 @@ import com.example.price_analysis_app.Links.Link;
 
 import com.example.price_analysis_app.R;
 import com.example.price_analysis_app.TempMenu;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -66,7 +64,7 @@ public class HomeActivity extends DrawerActivity implements Icallable {
     private Spinner optionsSp;
     private Button menuTestButton;
     Account account = SessionManager.getCurrentAccount();
-
+    private Button compareFab;
     private String selectedOption;
 
     @Override
@@ -99,18 +97,12 @@ public class HomeActivity extends DrawerActivity implements Icallable {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        int i = 0;
+
 
 
         //test button for menu
         menuTestButton = findViewById(R.id.buttonMenu);
-        Button button = findViewById(R.id.buttonRegister);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                testDrawer();
-            }
-        });
+
 
         menuTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,14 +111,14 @@ public class HomeActivity extends DrawerActivity implements Icallable {
             }
         });
 
-        Button bookmarkButton = findViewById(R.id.BOOKMARKS);
-        bookmarkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BookmarkedActivity();
-            }
-
-        });
+//        Button bookmarkButton = findViewById(R.id.BOOKMARKS);
+//        bookmarkButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                BookmarkedActivity();
+//            }
+//
+//        });
 
 
 //search bar
@@ -221,10 +213,20 @@ public class HomeActivity extends DrawerActivity implements Icallable {
             }
         });
 
-
+        compareFab = findViewById(R.id.compareFab);
+        compareFab.setOnClickListener(v -> {
+            Intent i = new Intent(this, CompareActivity.class);
+            startActivity(i);
+        });
+        updateCompareButtonVisibility();
 
     }
-
+    public void updateCompareButtonVisibility() {
+        compareFab.setVisibility(
+                ComparisonManager.getInstance().getSelectedItems().size() == 2
+                        ? View.VISIBLE : View.GONE
+        );
+    }
     //item retrieving functionality from the database --maybe change
     private void retrieveItems(String collection) {
         new Thread(() -> {
