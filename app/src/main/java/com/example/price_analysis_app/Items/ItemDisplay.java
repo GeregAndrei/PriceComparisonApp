@@ -67,6 +67,7 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
     private TextView name;
     private TextView specs;
     private ImageView img;
+    private Button closeCommentButton;
     private boolean isCommentsInflated = false;
     private CommentAdapter commentAdapter;
     private View commentsView;
@@ -151,31 +152,27 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
             }
 
        Button showCommentsButton = findViewById(R.id.showCommentsButton);
+
         showCommentsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!isCommentsInflated) {
-                    ViewStub stub = findViewById(R.id.commentsViewStub);
-                    commentsView = stub.inflate();
-                    RecyclerView commentsRv = commentsView.findViewById(R.id.commentsRv);
-                    commentsRv.setLayoutManager(new LinearLayoutManager(ItemDisplay.this));
-                    commentsRv.setAdapter(commentAdapter);
-                    isCommentsInflated = true;
                     fetchCommentsFromFirestore(selectedCollection, selectedObject.getDocId());
                 } else {
-                    if (commentsView.getVisibility() == View.VISIBLE) {
-                        commentsView.setVisibility(View.GONE);
-                    } else {
-                        commentsView.setVisibility(View.VISIBLE);
-                    }
+                    boolean nowVisible = commentsView.getVisibility() != View.VISIBLE;
+                    commentsView.setVisibility(nowVisible ? View.VISIBLE : View.GONE);
+                    closeCommentButton.setVisibility(nowVisible ? View.VISIBLE : View.GONE);
                 }
             }
         });
-        Button closeCommentsButton = findViewById(R.id.buttonCloseComment);
-        closeCommentsButton.setOnClickListener(new View.OnClickListener() {
+
+         closeCommentButton = findViewById(R.id.buttonCloseComment);
+        closeCommentButton.setOnClickListener(new View.OnClickListener() {
                                                    @Override
                                                    public void onClick(View v) {
                                                        commentsView.setVisibility(View.GONE);
+
+                                                       closeCommentButton.setVisibility(View.GONE);
                                                    }
                                                });
 
@@ -186,6 +183,8 @@ public class ItemDisplay extends AppCompatActivity implements Icallable {
                addComment(selectedObject);
             }
         });
+
+
         commentActivityLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -238,52 +237,56 @@ private void pushCommentToFirebase(String documentId, Comment comment) {
         commentActivityLauncher.launch(intent);
     }
 
-private void fetchCommentsFromFirestore(String collectionName, String docId) {
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    db.collection(collectionName)
-            .document(docId)
-            .get()
-            .addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists()) {
+    private void fetchCommentsFromFirestore(String collectionName, String docId) {
+        db.collection(collectionName)
+                .document(docId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (!documentSnapshot.exists()) {
+                        Log.d("aaa", "No such document");
+                        Toast.makeText(this, "Item not found", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     List<Map<String, Object>> commentsField =
                             (List<Map<String, Object>>) documentSnapshot.get("comments");
-
-                    List<Comment> tempComments = new ArrayList<>();
-
-                    if (commentsField != null && !commentsField.isEmpty()) {
-                        for (Map<String, Object> commentMap : commentsField) {
-
-                            String accountName = (String) commentMap.get("accountName");
-                            String accountId = (String) commentMap.get("accountId");
-                            String description = (String) commentMap.get("description");
-                            Number barNumber   = (Number) commentMap.get("bar");
-
-                            float bar = (barNumber != null) ? barNumber.floatValue() : 0f;
-
-
-                            Comment comment = new Comment(accountName,currentAccount.getId(), docId, description, bar);
-
-                            tempComments.add(comment);
-                        }
+                    if (commentsField == null || commentsField.isEmpty()) {
+                        Toast.makeText(this, "No comments available for this item", Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                    if (tempComments.isEmpty()) {
 
-                        commentList.clear();
-                        commentAdapter.notifyDataSetChanged();
-
-                        Toast.makeText(ItemDisplay.this, "No comments available for this item", Toast.LENGTH_SHORT).show();
-                    } else {
-
-                        commentList.clear();
-                        commentList.addAll(tempComments);
-                        commentAdapter.notifyDataSetChanged();
+                    // build Comment list
+                    commentList.clear();
+                    for (Map<String, Object> commentMap : commentsField) {
+                        String accountName = (String) commentMap.get("accountName");
+                        String description = (String) commentMap.get("description");
+                        Number barNumber   = (Number) commentMap.get("bar");
+                        float bar = barNumber != null ? barNumber.floatValue() : 0f;
+                        commentList.add(new Comment(accountName, currentAccount.getId(), docId, description, bar));
                     }
-                } else {
-                    Log.d("Firestore", "No such document");
-                }
-            })
-            .addOnFailureListener(e -> Log.e("Firestore", "Error fetching comments", e));
-}
+
+                    // only now inflate the stub
+                    if (!isCommentsInflated) {
+                        ViewStub stub = findViewById(R.id.commentsViewStub);
+                        commentsView = stub.inflate();
+                        RecyclerView commentsRv = commentsView.findViewById(R.id.commentsRv);
+
+                        commentsRv.setLayoutManager(new LinearLayoutManager(this));
+                        commentsRv.setAdapter(commentAdapter);
+                        isCommentsInflated = true;
+                        closeCommentButton.setVisibility(View.VISIBLE);
+                    }
+
+                    // ensure it's visible
+                    commentsView.setVisibility(View.VISIBLE);
+                    commentAdapter.notifyDataSetChanged();
+
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("aaa", "Error fetching comments", e);
+                    Toast.makeText(this, "Failed to load comments", Toast.LENGTH_SHORT).show();
+                });
+    }
 
     public void toggleBookmark (Item selectedObject, FirebaseAuth mAuth) {
 

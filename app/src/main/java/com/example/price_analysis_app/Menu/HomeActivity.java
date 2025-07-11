@@ -50,8 +50,6 @@ import java.util.regex.Pattern;
 
 public class HomeActivity extends DrawerActivity implements Icallable {
     private EditText searchBar;
-//comments close button, add more sites, more products,change comment to have an id, name should not be hard coded for collections
-
     public HomeActivity() throws MalformedURLException {
     }
 
@@ -123,7 +121,6 @@ public class HomeActivity extends DrawerActivity implements Icallable {
 
 //search bar
         searchBar = findViewById(R.id.searchBar);
-
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
