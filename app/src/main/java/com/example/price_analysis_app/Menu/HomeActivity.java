@@ -52,7 +52,7 @@ public class HomeActivity extends DrawerActivity implements Icallable {
     private EditText searchBar;
     public HomeActivity() throws MalformedURLException {
     }
-
+//comparing system
     private Button button;
     private FirebaseFirestore db;
     private static List<Item> itemList = new ArrayList<>();
@@ -79,7 +79,7 @@ public class HomeActivity extends DrawerActivity implements Icallable {
         List<String> collectionNames = Arrays.asList(new String("combine frigorifice"),
                 new String("aspiratoare"),
                 new String("cuptoare cu microunde"),
-                new String("espressoare automate"),
+                new String("espressoare_automate"),
                 new String("frigidere"),
                 new String("masini de spalat rufe")
         );
@@ -108,16 +108,6 @@ public class HomeActivity extends DrawerActivity implements Icallable {
                 testDrawer();
             }
         });
-
-//        Button bookmarkButton = findViewById(R.id.BOOKMARKS);
-//        bookmarkButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                BookmarkedActivity();
-//            }
-//
-//        });
-
 
 //search bar
         searchBar = findViewById(R.id.searchBar);

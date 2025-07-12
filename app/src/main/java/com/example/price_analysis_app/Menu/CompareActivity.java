@@ -34,74 +34,71 @@ public class CompareActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
-
-                super.onCreate(savedInstanceState);
-                setContentView(R.layout.activity_compare);
-
-                imageLeft = findViewById(R.id.imageLeft);
-                imageRight = findViewById(R.id.imageRight);
-                buyLeftBtn = findViewById(R.id.buyLeftBtn);
-                buyRightBtn = findViewById(R.id.buyRightBtn);
-                comparisonText = findViewById(R.id.comparisonText);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_compare);
+        imageLeft = findViewById(R.id.imageLeft);
+        imageRight = findViewById(R.id.imageRight);
+        buyLeftBtn = findViewById(R.id.buyLeftBtn);
+        buyRightBtn = findViewById(R.id.buyRightBtn);
+        comparisonText = findViewById(R.id.comparisonText);
         explainAllBtn   = findViewById(R.id.btnExplainAll);
 
-                List<Item> items = ComparisonManager.getInstance().getSelectedItems();
-                if (items.size() != 2) {
-                    finish();
-                    return;
-                }
-                Item left = items.get(0);
-                Item right = items.get(1);
+        List<Item> items = ComparisonManager.getInstance().getSelectedItems();
+        if (items.size() != 2) {
+            finish();
+            return;
+        }
+        Item left = items.get(0);
+        Item right = items.get(1);
 
-                // Load images
-                Glide.with(this).load(left.getImgUrl()).into(imageLeft);
-                Glide.with(this).load(right.getImgUrl()).into(imageRight);
+        // Load images
+        Glide.with(this).load(left.getImgUrl()).into(imageLeft);
+        Glide.with(this).load(right.getImgUrl()).into(imageRight);
 
-                // Determine lowest-price link for each item
-                Link lowestLeft = Collections.min(
-                        left.getLinkList(), Comparator.comparingDouble(Link::getPrice)
-                );
-                Link lowestRight = Collections.min(
-                        right.getLinkList(), Comparator.comparingDouble(Link::getPrice)
-                );
+        // Determine lowest-price link for each item
+        Link lowestLeft = Collections.min(
+                left.getLinkList(), Comparator.comparingDouble(Link::getPrice)
+        );
+        Link lowestRight = Collections.min(
+                right.getLinkList(), Comparator.comparingDouble(Link::getPrice)
+        );
 
-                // Configure Buy buttons
-                buyLeftBtn.setText(
-                        String.format("Buy at %s for %.2f", lowestLeft.getSiteName(), lowestLeft.getPrice())
-                );
-                buyLeftBtn.setOnClickListener(v -> {
-                    startActivity(new Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse(lowestLeft.getSiteLink().toString())
-                    ));
-                });
+        // Configure Buy buttons
+        buyLeftBtn.setText(
+                String.format("Buy at %s for %.2f", lowestLeft.getSiteName(), lowestLeft.getPrice())
+        );
+        buyLeftBtn.setOnClickListener(v -> {
+            startActivity(new Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(lowestLeft.getSiteLink().toString())
+            ));
+        });
 
-                buyRightBtn.setText(
-                        String.format("Buy at %s for %.2f", lowestRight.getSiteName(), lowestRight.getPrice())
-                );
-                buyRightBtn.setOnClickListener(v -> {
-                    startActivity(new Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse(lowestRight.getSiteLink().toString())
-                    ));
-                });
+        buyRightBtn.setText(
+                String.format("Buy at %s for %.2f", lowestRight.getSiteName(), lowestRight.getPrice())
+        );
+        buyRightBtn.setOnClickListener(v -> {
+            startActivity(new Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(lowestRight.getSiteLink().toString())
+            ));
+        });
 
-                // Build ChatGPT prompt using lowest prices
+        // Build ChatGPT prompt using lowest prices
         String prompt = String.format(
                 "Analyze the technical specifications and lowest available prices of two products, and provide a detailed review with pros and cons for each, followed by a comparative summary and recommendation: " +
-                "Product A: %s " +
-                "Specifications: %s " +
-                "Lowest Price: %.2f on %s " +
-                "Product B: %s " +
-                "Specifications: %s " +
-                "Lowest Price: %.2f on %s ",
+                        "Product A: %s " +
+                        "Specifications: %s " +
+                        "Lowest Price: %.2f on %s " +
+                        "Product B: %s " +
+                        "Specifications: %s " +
+                        "Lowest Price: %.2f on %s ",
                 left.getName(), left.getTechnicalChar(), lowestLeft.getPrice(), lowestLeft.getSiteName(),
                 right.getName(), right.getTechnicalChar(), lowestRight.getPrice(), lowestRight.getSiteName()
         );
 
 
-            // Call ChatGPT
+        // Call ChatGPT
         ChatGPTClient.getInstance()
                 .compare(prompt, responseText -> comparisonText.setText(responseText));
 
