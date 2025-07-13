@@ -26,6 +26,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -94,71 +95,20 @@ public class BookmarkActivity extends DrawerActivity implements Icallable2 {
             itemAdapter.notifyDataSetChanged();
             return;
         }
+        List<String> collectionNames = Arrays.asList(new String("combine frigorifice"),
+                new String("aspiratoare"),
+                new String("cuptoare cu microunde"),
+                new String("espressoare automate"),
+                new String("frigidere"),
+                new String("masini de spalat rufe")
+        );
 
-        db.collection("combine_frigorifice")
-                .whereIn(FieldPath.documentId(),bookmarkedIds)
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    for (DocumentSnapshot documentSnapshot : querySnapshot) {
-                        List<String> g = (ArrayList<String>) documentSnapshot.get("linkList");
-
-                        String name = (String) documentSnapshot.get("name");
-                        String imgUrl = (String) documentSnapshot.get("imgUrl");
-                        String productCode = (String) documentSnapshot.get("productCode");
-                        String technicalChar = (String) documentSnapshot.get("technicalChar");
-                        String documentId = (String) documentSnapshot.getId();
-                        List<Link> links = new ArrayList<>();
-                        for (String h : g) {
-                            Link temp = fromString(h);
-                            links.add(temp);
-                        }
-                        Item item = new Item(name, productCode, links, imgUrl, technicalChar, documentId);
-
-                            bookmarkedItems.add(item);
-                            temporaryClassList.add(new TemporaryClass(item,documentSnapshot.getReference()));
-
-                    }
-                    itemAdapter.notifyDataSetChanged();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("BookmarkActivity", "Error getting documents: ", e);
-                });
-
-        db.collection("cuptoare_incorporabile")
-                .whereIn(FieldPath.documentId(),bookmarkedIds)
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    for (DocumentSnapshot documentSnapshot : querySnapshot) {
-
-                        List<String> g = (ArrayList<String>) documentSnapshot.get("linkList");
-
-                        String name = (String) documentSnapshot.get("name");
-                        String imgUrl = (String) documentSnapshot.get("imgUrl");
-                        String productCode = (String) documentSnapshot.get("productCode");
-                        String technicalChar = (String) documentSnapshot.get("technicalChar");
-                        String documentId = (String) documentSnapshot.getId();
-                        List<Link> links = new ArrayList<>();
-                        for (String h : g) {
-                            Link temp = fromString(h);
-                            links.add(temp);
-                        }
-                        Item item = new Item(name, productCode, links, imgUrl, technicalChar, documentId);
-
-                            bookmarkedItems.add(item);
-                            temporaryClassList.add(new TemporaryClass(item,documentSnapshot.getReference()));
-
-                    }
-                    itemAdapter.notifyDataSetChanged();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("BookmarkActivity", "Error getting documents: ", e);
-                });
-
-        db.collection("masini_spalat_rufe")
-                .whereIn(FieldPath.documentId(),bookmarkedIds)
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    for (DocumentSnapshot documentSnapshot : querySnapshot) {
+        for (int i =0; i <collectionNames.size();i++) {
+            db.collection(collectionNames.get(i).toString())
+                    .whereIn(FieldPath.documentId(), bookmarkedIds)
+                    .get()
+                    .addOnSuccessListener(querySnapshot -> {
+                        for (DocumentSnapshot documentSnapshot : querySnapshot) {
                             List<String> g = (ArrayList<String>) documentSnapshot.get("linkList");
 
                             String name = (String) documentSnapshot.get("name");
@@ -172,29 +122,37 @@ public class BookmarkActivity extends DrawerActivity implements Icallable2 {
                                 links.add(temp);
                             }
                             Item item = new Item(name, productCode, links, imgUrl, technicalChar, documentId);
-                            bookmarkedItems.add(item);
-                            temporaryClassList.add(new TemporaryClass(item,documentSnapshot.getReference()));
 
-                    }
-                    itemAdapter.notifyDataSetChanged();
-                })
-                .addOnFailureListener(e -> {
-                   Log.e("BookmarkActivity", "Error getting documents: ", e);
-                });
+                            bookmarkedItems.add(item);
+                            temporaryClassList.add(new TemporaryClass(item, documentSnapshot.getReference()));
+
+                        }
+                        itemAdapter.notifyDataSetChanged();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("BookmarkActivity", "Error getting documents: ", e);
+                    });
+
+
+        }
     }
     public Link fromString(String linkString) {
-
+        // match the URL
         Pattern siteLinkPattern = Pattern.compile("siteLink='(https?://[^']+)'");
-        Pattern namePattern = Pattern.compile("name='([^']*)'");
-        Pattern pricePattern = Pattern.compile("price='([0-9.,]+) Lei'");
-        Pattern pricePattern2 = Pattern.compile("price='([0-9.,]+) RON'");
+        // match the name
+        Pattern namePattern     = Pattern.compile("name='([^']*)'");
+        // match price, allowing digits, dots, commas, optional whitespace, then Lei or RON
+        Pattern pricePattern    = Pattern.compile("price='([0-9.,]+)\\s*(?:Lei|RON)'");
+
         Matcher siteLinkMatcher = siteLinkPattern.matcher(linkString);
-        Matcher nameMatcher = namePattern.matcher(linkString);
-        Matcher priceMatcher = pricePattern.matcher(linkString);
-        Matcher priceMatcher2 = pricePattern2.matcher(linkString);
-        URL siteLink = null;
-        String name = null;
-        double price = 0.0;
+        Matcher nameMatcher     = namePattern.matcher(linkString);
+        Matcher priceMatcher    = pricePattern.matcher(linkString);
+
+        URL    siteLink = null;
+        String name     = null;
+        double price    = 0.0;
+
+        // extract URL
         if (siteLinkMatcher.find()) {
             try {
                 siteLink = new URL(siteLinkMatcher.group(1));
@@ -203,38 +161,25 @@ public class BookmarkActivity extends DrawerActivity implements Icallable2 {
             }
         }
 
-        // Extract name
+        // extract name
         if (nameMatcher.find()) {
             name = nameMatcher.group(1);
         }
 
-        // Extract price
+        // extract price
         if (priceMatcher.find()) {
 
-            String priceString = priceMatcher.group(1).replace(".", "").replace(",", ".");
-
+            String raw = priceMatcher.group(1)
+                    .replace(".", "")    // remove thousands separator
+                    .replace(",", ".");  // convert decimal comma to dot
             try {
-                price = Double.parseDouble(priceString);
-                //   System.out.println("PRICE IS "+price);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
-        if (priceMatcher2.find()) {
-
-            String priceString = priceMatcher2.group(1).replace(".", "").replace(",", ".");
-
-            try {
-                price = Double.parseDouble(priceString);
-                //   System.out.println("PRICE IS "+price);
+                price = Double.parseDouble(raw);
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
         }
 
-        Link result = new Link(siteLink, name, price);
-
-        return result;
+        return new Link(siteLink, name, price);
     }
 
     @Override

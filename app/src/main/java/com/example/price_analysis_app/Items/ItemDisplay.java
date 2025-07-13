@@ -372,7 +372,7 @@ private void pushCommentToFirebase(String documentId, Comment comment) {
             @Override
             public void onResponse(String response) {
                 loadingIndicator.setVisibility(View.GONE);
-                animateText(analysisTextView, response);
+               analysisTextView.setText(response);
             }
 
             @Override
@@ -416,20 +416,7 @@ private void pushCommentToFirebase(String documentId, Comment comment) {
         });
     }
 
-    private void animateText(final TextView textView, final String text) {
-        textView.setText("");
-        final int length = text.length();
-        final Handler handler = new Handler();
-        for (int i = 0; i < length; i++) {
-            final int index = i;
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    textView.append(String.valueOf(text.charAt(index)));
-                }
-            }, 10 * i);
-        }
-    }
+
     private void closeAnalysis() {
         if (analysisView != null) {
             analysisView.setVisibility(View.GONE);

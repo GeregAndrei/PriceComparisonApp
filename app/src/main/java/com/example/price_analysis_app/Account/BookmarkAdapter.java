@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -67,6 +68,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
                 mainActivityCallback2.onItemClicked2(pos);
             }
         });
+
     }
 
     @Override
@@ -79,6 +81,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
         private TextView name;
         private ImageView imgUrl;
         private TextView priceAndSite;
+        private CheckBox compareCheckbox;
 
 
         public BookmarkHolder(@NonNull View itemView) {
@@ -86,6 +89,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
             name = itemView.findViewById(R.id.itemNameTv);
             imgUrl = itemView.findViewById(R.id.itemImageTv);
             priceAndSite=itemView.findViewById(R.id.itemPriceAndSitetv);
+
         }
 
     }
